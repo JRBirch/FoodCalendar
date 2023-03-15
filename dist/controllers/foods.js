@@ -10,28 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFood = exports.editFood = exports.getSingleFood = exports.createFood = exports.getAllFoods = void 0;
+const http_status_codes_1 = require("http-status-codes");
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Get All Foods");
-    res.status(200).send("Get All Foods");
+    res.status(http_status_codes_1.StatusCodes.OK).send("Get All Foods");
 });
 exports.getAllFoods = getAllFoods;
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Get Single Food");
-    res.status(200).send("Get Single Food");
+    res.status(http_status_codes_1.StatusCodes.OK).send("Get Single Food");
 });
 exports.getSingleFood = getSingleFood;
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Create Food");
-    res.status(200).send("Create Food");
+    res.status(http_status_codes_1.StatusCodes.CREATED).send("Create Food");
 });
 exports.createFood = createFood;
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Edit Food");
-    res.status(200).send("Edit Food");
+    res.status(http_status_codes_1.StatusCodes.OK).send("Edit Food");
 });
 exports.editFood = editFood;
 const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Delete Food");
-    res.status(200).send("Delete Food");
+    res.status(http_status_codes_1.StatusCodes.OK).send("Delete Food");
 });
 exports.deleteFood = deleteFood;
