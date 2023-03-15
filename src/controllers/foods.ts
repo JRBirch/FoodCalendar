@@ -1,13 +1,16 @@
 import {Request, Response} from "express";
 import {StatusCodes} from "http-status-codes";
+import CustomError from "../errors/custom_error"
 
 const getAllFoods = async(req: Request, res: Response) => {
     console.log("Get All Foods");
+    throw new Error("This is a server error");
     res.status(StatusCodes.OK).send("Get All Foods");
 }
 
 const getSingleFood = async(req: Request, res: Response) => {
     console.log("Get Single Food");
+    throw new CustomError("This is a custom error", StatusCodes.BAD_REQUEST);
     res.status(StatusCodes.OK).send("Get Single Food");
 }
 

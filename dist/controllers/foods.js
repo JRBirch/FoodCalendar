@@ -8,16 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFood = exports.editFood = exports.getSingleFood = exports.createFood = exports.getAllFoods = void 0;
 const http_status_codes_1 = require("http-status-codes");
+const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Get All Foods");
+    throw new Error("This is a server error");
     res.status(http_status_codes_1.StatusCodes.OK).send("Get All Foods");
 });
 exports.getAllFoods = getAllFoods;
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Get Single Food");
+    throw new custom_error_1.default("This is a custom error", http_status_codes_1.StatusCodes.BAD_REQUEST);
     res.status(http_status_codes_1.StatusCodes.OK).send("Get Single Food");
 });
 exports.getSingleFood = getSingleFood;

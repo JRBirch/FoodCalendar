@@ -3,18 +3,20 @@ import "express-async-errors"; //Async wrapper
 import connectDB from './db/connect';
 import foodsRouter from './routes/foods';
 import notFound from './middleware/not_found';
+import errorHandlerMiddleware from './middleware/error_handler';
 import dotenv from 'dotenv';
 dotenv.config();
 
 // Create an instance of the app
 const app: Express = express();
 
-// Middleware
-app.use(express.json());
-app.use(notFound);
-
 // Routes
 app.use("/api/v1/foods", foodsRouter)
+
+// Middleware
+app.use(express.json());
+app.use(errorHandlerMiddleware);
+app.use(notFound);
 
 // Port number on which server will run
 const port = process.env.PORT || 5000;
@@ -37,5 +39,3 @@ const start = async () => {
 if (require.main === module) {
     start();
 }
-
-
