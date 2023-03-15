@@ -14,18 +14,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const connect_1 = __importDefault(require("./db/connect"));
+const foods_1 = __importDefault(require("./routes/foods"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+// Create an instance of the app
 const app = (0, express_1.default)();
+// Middleware
+app.use(express_1.default.json());
+// Routes
+app.use("/api/v1/foods", foods_1.default);
+// Dummy Route
 app.get('/', (req, res) => {
     res.send('Express + TypeScript Server');
 });
 // Port number on which server will run
-const port = process.env.PORT || 3000;
-/**
- * Check that the mongoURI is set, then connect to the database
- * Once connected to the db, load the server
- */
+const port = process.env.PORT || 5000;
+// Check that the mongoURI is set, then connect to the database, then load the server
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mongoURI = process.env.MONGO_URI;
@@ -39,6 +43,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(error);
     }
 });
+// Loaded when app.js is run
 if (require.main === module) {
     start();
 }
