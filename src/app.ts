@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import "express-async-errors"; //Async wrapper
 import connectDB from './db/connect';
 import foodsRouter from './routes/foods';
 import notFound from './middleware/not_found';

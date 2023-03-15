@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+require("express-async-errors"); //Async wrapper
 const connect_1 = __importDefault(require("./db/connect"));
 const foods_1 = __importDefault(require("./routes/foods"));
 const not_found_1 = __importDefault(require("./middleware/not_found"));
