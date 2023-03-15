@@ -12,10 +12,6 @@ app.use(express.json());
 
 // Routes
 app.use("/api/v1/foods", foodsRouter)
-// Dummy Route
-app.get('/', (req: Request, res: Response) => {
-    res.send('Express + TypeScript Server');
-});
 
 // Port number on which server will run
 const port = process.env.PORT || 5000;

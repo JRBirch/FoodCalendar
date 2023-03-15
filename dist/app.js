@@ -23,10 +23,6 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Routes
 app.use("/api/v1/foods", foods_1.default);
-// Dummy Route
-app.get('/', (req, res) => {
-    res.send('Express + TypeScript Server');
-});
 // Port number on which server will run
 const port = process.env.PORT || 5000;
 // Check that the mongoURI is set, then connect to the database, then load the server
