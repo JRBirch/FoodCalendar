@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import connectDB from './db/connect';
 import foodsRouter from './routes/foods';
+import notFound from './middleware/not_found';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,6 +10,7 @@ const app: Express = express();
 
 // Middleware
 app.use(express.json());
+app.use(notFound);
 
 // Routes
 app.use("/api/v1/foods", foodsRouter)
