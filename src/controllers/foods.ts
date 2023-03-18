@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors/custom_error";
-import { IFood, Food } from "../models/food";
-import { Document } from "mongoose";
+import { IFood, Food, FoodDoc } from "../models/food";
 
 const getAllFoods = async (req: Request, res: Response) => {
     console.log("Get All Foods");
@@ -16,10 +15,8 @@ const getSingleFood = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).send("Get Single Food");
 };
 
-const createFood = async (req: Request<undefined,undefined,IFood>, res: Response<Document<any,any,IFood>>) => {
-    const {name, quantity, unitOfMeasure} = req.body;
-    let food: IFood = {name, quantity, unitOfMeasure};
-    const createdFood: Document<any,any,IFood>  = await Food.create(food);
+const createFood = async (req: Request<undefined,undefined,IFood>, res: Response<FoodDoc>) => {
+    const createdFood: FoodDoc  = await Food.create(req.body);
     res.status(StatusCodes.CREATED).json(createdFood);
 };
 

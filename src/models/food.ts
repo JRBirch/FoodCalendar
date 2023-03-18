@@ -1,10 +1,12 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
 interface IFood {
     name: string;
     quantity: number;
     unitOfMeasure: string;
 }
+
+type FoodDoc = Document<any,any,IFood>;
 
 const foodSchema = new Schema<IFood>({
     name: { type: String, required: [true, "Please provide name of food"] },
@@ -14,4 +16,4 @@ const foodSchema = new Schema<IFood>({
 
 const Food = model<IFood>('Food', foodSchema);
 
-export {IFood, Food};
+export {IFood, Food, FoodDoc};
