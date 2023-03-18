@@ -9,12 +9,12 @@ dotenv.config();
 
 // Create an instance of the app
 const app: Express = express();
+app.use(express.json());
 
 // Routes
 app.use("/api/v1/foods", foodsRouter)
 
 // Middleware
-app.use(express.json());
 app.use(errorHandlerMiddleware);
 app.use(notFound);
 

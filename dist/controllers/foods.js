@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFood = exports.editFood = exports.getSingleFood = exports.createFood = exports.getAllFoods = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
+const food_1 = require("../models/food");
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Get All Foods");
     throw new Error("This is a server error");
@@ -28,8 +29,10 @@ const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getSingleFood = getSingleFood;
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Create Food");
-    res.status(http_status_codes_1.StatusCodes.CREATED).send("Create Food");
+    const { name, quantity, unitOfMeasure } = req.body;
+    let food = { name, quantity, unitOfMeasure };
+    const createdFood = yield food_1.Food.create(food);
+    res.status(http_status_codes_1.StatusCodes.CREATED).json(createdFood);
 });
 exports.createFood = createFood;
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
