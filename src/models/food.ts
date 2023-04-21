@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, isValidObjectId, HydratedDocument } from "mongoose";
 
 interface IFood {
     name: string;
@@ -6,7 +6,7 @@ interface IFood {
     unitOfMeasure: string;
 }
 
-type FoodDoc = Document<any,any,IFood>;
+type FoodDoc = HydratedDocument<IFood>;
 
 const foodSchema = new Schema<IFood>({
     name: { type: String, required: [true, "Please provide name of food"] },
@@ -14,6 +14,10 @@ const foodSchema = new Schema<IFood>({
     unitOfMeasure: { type: String, required: [true, "Please enter the unit of measure"], enum: ['grams', 'kg', 'units', 'milli litres', 'litres', 'cups'], default: 'units' }
 });
 
+const isValidId = (id:string):boolean => {
+    return isValidObjectId(id);
+}
+
 const Food = model<IFood>('Food', foodSchema);
 
-export {IFood, Food, FoodDoc};
+export {IFood, Food, FoodDoc, isValidId};

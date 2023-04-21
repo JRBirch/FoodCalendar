@@ -17,15 +17,20 @@ const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const food_1 = require("../models/food");
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Get All Foods");
-    throw new Error("This is a server error");
-    res.status(http_status_codes_1.StatusCodes.OK).send("Get All Foods");
+    const foods = yield food_1.Food.find({});
+    res.status(http_status_codes_1.StatusCodes.OK).json(foods);
 });
 exports.getAllFoods = getAllFoods;
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Get Single Food");
-    throw new custom_error_1.default("This is a custom error", http_status_codes_1.StatusCodes.BAD_REQUEST);
-    res.status(http_status_codes_1.StatusCodes.OK).send("Get Single Food");
+    const { id: foodId } = req.params;
+    if (!(0, food_1.isValidId)(foodId)) {
+        throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
+    }
+    const food = yield food_1.Food.findById(foodId);
+    if (!food) {
+        throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json(food);
 });
 exports.getSingleFood = getSingleFood;
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,13 +38,33 @@ const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     res.status(http_status_codes_1.StatusCodes.CREATED).json(createdFood);
 });
 exports.createFood = createFood;
+/**
+ * Onlt update the fields passed into the method editFood as it is a PATCH request.
+ */
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Edit Food");
-    res.status(http_status_codes_1.StatusCodes.OK).send("Edit Food");
+    const { body: { quantity, unitOfMeasure }, params: { id: foodId } } = req;
+    if (!(0, food_1.isValidId)(foodId)) {
+        throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
+    }
+    if (quantity === '' || unitOfMeasure == '') {
+        throw new custom_error_1.default(`Quantity or unit of measure field cannot be empty`, http_status_codes_1.StatusCodes.BAD_REQUEST);
+    }
+    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId }, req.body, { new: true, runValidators: true });
+    if (!food) {
+        throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json(food);
 });
 exports.editFood = editFood;
 const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Delete Food");
-    res.status(http_status_codes_1.StatusCodes.OK).send("Delete Food");
+    const { id: foodId } = req.params;
+    if (!(0, food_1.isValidId)(foodId)) {
+        throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
+    }
+    const food = yield food_1.Food.findByIdAndDelete(foodId);
+    if (!food) {
+        throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json(food);
 });
 exports.deleteFood = deleteFood;

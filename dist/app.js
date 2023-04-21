@@ -22,12 +22,13 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 // Create an instance of the app
 const app = (0, express_1.default)();
+app.use(express_1.default.static(__dirname + '/../public'));
 app.use(express_1.default.json());
 // Routes
 app.use("/api/v1/foods", foods_1.default);
 // Middleware
-app.use(error_handler_1.default);
 app.use(not_found_1.default);
+app.use(error_handler_1.default);
 // Port number on which server will run
 const port = process.env.PORT || 5000;
 // Check that the mongoURI is set, then connect to the database, then load the server

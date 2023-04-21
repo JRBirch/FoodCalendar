@@ -9,14 +9,15 @@ dotenv.config();
 
 // Create an instance of the app
 const app: Express = express();
+app.use(express.static(__dirname+'/../public'));
 app.use(express.json());
 
 // Routes
 app.use("/api/v1/foods", foodsRouter)
 
 // Middleware
-app.use(errorHandlerMiddleware);
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 // Port number on which server will run
 const port = process.env.PORT || 5000;
