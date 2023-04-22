@@ -9,7 +9,7 @@ dotenv.config();
 
 // Create an instance of the app
 const app: Express = express();
-app.use(express.static(__dirname+'/../public'));
+app.use(express.static(__dirname+'/../dist/public'));
 app.use(express.json());
 
 // Routes

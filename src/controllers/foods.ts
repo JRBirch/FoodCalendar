@@ -21,6 +21,7 @@ const getSingleFood = async (req: Request, res: Response<FoodDoc>) => {
 };
 
 const createFood = async (req: Request<undefined, undefined, IFood>, res: Response<FoodDoc>) => {
+    console.log("HIT SERVER")
     const createdFood: FoodDoc = await Food.create(req.body);
     res.status(StatusCodes.CREATED).json(createdFood);
 };
