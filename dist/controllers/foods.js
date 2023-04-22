@@ -34,7 +34,6 @@ const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getSingleFood = getSingleFood;
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("HIT SERVER");
     const createdFood = yield food_1.Food.create(req.body);
     res.status(http_status_codes_1.StatusCodes.CREATED).json(createdFood);
 });

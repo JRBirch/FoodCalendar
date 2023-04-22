@@ -43,7 +43,6 @@ const editFood = async(foodObj) => {
         foods = foods.filter((item) => {
             return item.dataset.id === updatedFood.data._id;
         })
-        console.log(foods);
         if (foods || food.length === 1) {
             foodList.removeChild(foods[0]);
             createFoodElement(updatedFood.data);
