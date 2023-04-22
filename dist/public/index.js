@@ -1,8 +1,9 @@
 const submitBtn = document.querySelector(".submit-btn");
 const foodName = document.querySelector("#name");
 const quantity = document.querySelector("#quantity");
-const unitOfMeasure = document.querySelector("#unit-of-measure")
+const unitOfMeasure = document.querySelector("#unit-of-measure");
 const foodList = document.querySelector(".list-food");
+const deleteAllBtn = document.querySelector("#delete-all-btn");
 
 // Creating Food 
 
@@ -17,10 +18,7 @@ const createFood = async(food) => {
     try{
         const newFood = await axios.post('/api/v1/foods/', food)
         // Add all foods to the list
-        let listEl = document.createElement("li");
-        listEl.dataset.id = newFood.data._id;
-        listEl.textContent= `${newFood.data.name}, ${newFood.data.quantity} ${newFood.data.unitOfMeasure}`
-        foodList.appendChild(listEl);
+        createFoodElement(newFood.data); 
     } catch (e) {
         console.log(e);
     }
@@ -28,19 +26,53 @@ const createFood = async(food) => {
 
 // Listing Foods
 
-window.addEventListener('DOMContentLoaded', (e) => {
-    const foods = getAllFoods()
+window.addEventListener('DOMContentLoaded', () => {
+    getAllFoods()
 })
 
 const getAllFoods = async() => {
     try{
-        const foods = await axios.get('/api/v1/foods')
-        const foodHtml = foods.data.map((item) => {
-            return `<li data-id="${item._id}">${item.name}, ${item.quantity} ${item.unitOfMeasure}</li>`
-        }).join("");
-        foodList.innerHTML=foodHtml;
+        const foods = await axios.get('/api/v1/foods');
+        foods.data.forEach(createFoodElement);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+/**
+ * Create a food element in the food list, with a delete button
+ * @param {*} food - A mongodb record 
+ */
+const createFoodElement = (food) => {
+    const listEl = document.createElement("li");
+    listEl.dataset.id = food._id;
+    listEl.textContent= `${food.name}, ${food.quantity} ${food.unitOfMeasure}`;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("delete-single-btn");
+    deleteBtn.addEventListener('click', () => {
+        deleteFood(deleteBtn.parentElement);
+    })
+
+    listEl.appendChild(deleteBtn);
+    foodList.appendChild(listEl);
+}
+
+// Deleting Foods 
+
+deleteAllBtn.addEventListener('click', () => {
+    // Get all child elements and convert to an array so they can  be iterated over
+    // foodList.children returns a HTMLCollection
+    const foods = Array.from(foodList.children)
+    foods.forEach(deleteFood)
+})
+
+const deleteFood = async(food) => {
+    try{
+        await axios.delete(`/api/v1/foods/${food.dataset.id}`);
+        foodList.removeChild(food);
     } catch (e) {
         console.log(e)
     }
 }
-
