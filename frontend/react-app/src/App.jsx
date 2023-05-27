@@ -1,9 +1,9 @@
 import './App.css'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 // import Navbar from "./Navbar";
-import AppLayout from './AppLayout';
-import Home from "./Home";
-import FoodList from "./FoodList";
+import AppLayout from './shared_layout/AppLayout';
+import Home from "./pages/Home";
+import FoodList from "./pages/FoodList";
 
 
 function App() {
