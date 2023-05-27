@@ -1,20 +1,52 @@
 import { useState } from "react";
+import CreatedFood from "../components/CreatedFood"
+
+// Remove this once we start fetching data from the server
+let id_count = 1
 
 const initialFoodState = {
+  id:"",
   name: "",
-  number: 0,
+  number: 1,
   unitOfMeasure: "Units",
 }
+
+// Have to create the method to handle the data storage in the same place
+// that the data is defined. Data that we display must sink up with the data
+// we have stored.
 
 const FoodList = () => {
   const [food, setFood] = useState(initialFoodState);
   const [createdFoods, setCreatedFoods] = useState([])
 
+  const removeItem = (id) => {
+    // This where the ping to the backend will go to delete the item
+    // If request fails do not cancel the item
+    setCreatedFoods(createdFoods.filter((item) => item.id !== id));
+  };
+
+  const updateItem = (food) =>{
+    // This is where the ping to the backend will go to update the item
+    // If request fails do not update the item
+    setCreatedFoods(
+      createdFoods.map((item) => {
+        if (item.id === food.id) {
+          return { ...item, name:food.name, number:food.number, unitOfMeasure:food.unitOfMeasure };
+        } else {
+          return item;
+        }
+      }))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // This is where we need to hit the server
+    // This is where we need to hit the server to create an item
     // After we hit the server we get a return object which will be the newly created food item
-    setCreatedFoods([...createdFoods, food])
+    // If request fails do not create the item
+    const newId = id_count + 1
+    setCreatedFoods([...createdFoods, {...food, id:newId}])
+    id_count = newId;
+    setFood(initialFoodState);
   }
 
   const handleChange = (e) =>{
@@ -62,22 +94,20 @@ const FoodList = () => {
         <button type="submit" className="btn">
           Submit
         </button>
+        </form>
 
         <section id="list-foods-section">
           <h3> Monday 30th April </h3>
           <div className="container-food">
             <ul className="list-food">
-              {createdFoods.map((food,index)=>{
-                return <li key={index}>
-                  <span id="name">{food.name}</span>
-                  <span id="number">{food.number}</span>
-                  <span id="unitOfMeasure">{food.unitOfMeasure}</span>
-                </li>
+              {createdFoods.map((food)=>{
+                // Set up key as id when we hit the server
+                return <CreatedFood key={food.id} food={food} removeItem={removeItem} updateItem={updateItem}/>
               })}
             </ul>
           </div>
         </section>
-      </form>
+      
     </>
   );
 };
