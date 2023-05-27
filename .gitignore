@@ -1,3 +1,4 @@
 /backend/node_modules
+/frontend/react-app/node_modules
 .env
 .vscode
