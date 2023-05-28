@@ -9,7 +9,19 @@ dotenv.config();
 
 // Create an instance of the app
 const app: Express = express();
-app.use(express.static(__dirname+'/../../frontend/vanilla'));
+
+// Server up different sets of static files depending on what is input
+if (process.argv[2] == "v" || !process.argv[2]){
+    // Vanilla JS frontend
+    console.log("Serving the vanilla js frontend ...")
+    app.use(express.static(__dirname+'/../../frontend/vanilla'));
+}
+if (process.argv[2] == "r" || !process.argv[2]){
+    // React JS frontend
+    console.log("Serving the React js frontend ...")
+    app.use(express.static(__dirname+'/../../frontend/react-app/dist'));
+}
+
 app.use(express.json());
 
 // Routes
