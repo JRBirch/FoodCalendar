@@ -22,7 +22,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 // Create an instance of the app
 const app = (0, express_1.default)();
-app.use(express_1.default.static(__dirname + '/../dist/public'));
+// app.use(express.static(__dirname+'/../dist/public'));
+app.use(express_1.default.static(__dirname + '/../../frontend/vanilla'));
 app.use(express_1.default.json());
 // Routes
 app.use("/api/v1/foods", foods_1.default);
