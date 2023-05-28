@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreatedFood from "../components/CreatedFood"
 
 // Remove this once we start fetching data from the server
@@ -53,8 +53,18 @@ const FoodList = () => {
     setFood({...food, [e.target.name]: e.target.value})
   }
 
+  const clearFoodList = () => {
+    // This is where we need to hit the server to delete all items
+    setCreatedFoods([])
+  }
+
+  useEffect(()=>{
+    // This is where we hit the server to fetch all the items in the list
+  }, [])
+
   return (
     <>
+      {/* Enter a food */}
       <form className="create-food-form" onSubmit={handleSubmit}>
         <div className="input-food-form">
           <label htmlFor="name" className="form-label">
@@ -96,6 +106,7 @@ const FoodList = () => {
         </button>
         </form>
 
+        {/* List the foods */}
         <section id="list-foods-section">
           <h3> Monday 30th April </h3>
           <div className="container-food">
@@ -107,6 +118,11 @@ const FoodList = () => {
             </ul>
           </div>
         </section>
+        
+        {/* Delete All Foods */}
+        {createdFoods.length>0 && <button id="clear-list" onClick={clearFoodList}>
+          Clear All Foods
+        </button>}
       
     </>
   );
