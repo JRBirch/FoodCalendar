@@ -19,3 +19,12 @@ Alternatively you can run a single compile command, turning the typescript code 
 Then to run the server: 
 
 `npm start` or `node ./dist/app`
+
+## Frontend
+The app can be run with two different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other has been written use React js and is a single page application. The vanilla js is the default code that is served. It can also be served by pass in the `v` argument: 
+
+`npm start v` \ `npm run dev v` 
+
+To serve up the react frontend the `r` argument can be used: 
+
+`npm start r` \ `npm run dev r`
