@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
-import CreatedFood from "../components/CreatedFood"
-
-// Remove this once we start fetching data from the server
-let id_count = 1
+import axios from "axios";
+import CreatedFood from "../components/CreatedFood";
 
 const initialFoodState = {
-  id:"",
+  _id: "",
   name: "",
-  number: 1,
-  unitOfMeasure: "Units",
-}
+  quantity: 1,
+  unitOfMeasure: "units",
+};
 
 // Have to create the method to handle the data storage in the same place
 // that the data is defined. Data that we display must sink up with the data
@@ -17,54 +15,94 @@ const initialFoodState = {
 
 const FoodList = () => {
   const [food, setFood] = useState(initialFoodState);
-  const [createdFoods, setCreatedFoods] = useState([])
+  const [createdFoods, setCreatedFoods] = useState([]);
 
-  const removeItem = (id) => {
-    // This where the ping to the backend will go to delete the item
-    // If request fails do not cancel the item
-    setCreatedFoods(createdFoods.filter((item) => item.id !== id));
+  const updateItem = async (food) => {
+    try {
+      const resp = await axios.patch(`/api/v1/foods/${food._id}`, {
+        name: food.name,
+        quantity: food.quantity,
+        unitOfMeasure: food.unitOfMeasure,
+      });
+      const updatedFood = resp.data;
+      setCreatedFoods(
+        createdFoods.map((item) => {
+          if (item._id === food._id) {
+            return {
+              ...item,
+              name: updatedFood.name,
+              quantity: updatedFood.quantity,
+              unitOfMeasure: updatedFood.unitOfMeasure,
+            };
+          } else {
+            return item;
+          }
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const updateItem = (food) =>{
-    // This is where the ping to the backend will go to update the item
-    // If request fails do not update the item
-    setCreatedFoods(
-      createdFoods.map((item) => {
-        if (item.id === food.id) {
-          return { ...item, name:food.name, number:food.number, unitOfMeasure:food.unitOfMeasure };
-        } else {
-          return item;
-        }
-      }))
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // This is where we need to hit the server to create an item
-    // After we hit the server we get a return object which will be the newly created food item
-    // If request fails do not create the item
-    const newId = id_count + 1
-    setCreatedFoods([...createdFoods, {...food, id:newId}])
-    id_count = newId;
-    setFood(initialFoodState);
-  }
-
-  const handleChange = (e) =>{
-    setFood({...food, [e.target.name]: e.target.value})
-  }
+    try {
+      const resp = await axios.post("/api/v1/foods/", {
+        name: food.name,
+        quantity: food.quantity,
+        unitOfMeasure: food.unitOfMeasure,
+      });
+      const createdFood = resp.data;
+      setCreatedFoods([...createdFoods, createdFood]);
+      setFood(initialFoodState);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const clearFoodList = () => {
-    // This is where we need to hit the server to delete all items
-    setCreatedFoods([])
-  }
+    createdFoods.forEach(deleteFood);
+    setCreatedFoods([]);
+  };
 
-  useEffect(()=>{
-    // This is where we hit the server to fetch all the items in the list
-  }, [])
+  const removeItem = async (id) => {
+    try {
+      await axios.delete(`/api/v1/foods/${id}`);
+      setCreatedFoods(createdFoods.filter((item) => item._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteFood = async (food) => {
+    try {
+      await axios.delete(`/api/v1/foods/${food._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFoods();
+  }, []);
+
+  const fetchFoods = async () => {
+    try {
+      const resp = await axios.get("/api/v1/foods");
+      const foods = resp.data;
+      setCreatedFoods(foods);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFood({ ...food, [e.target.name]: e.target.value });
+  };
 
   return (
     <>
-      {/* Enter a food */}
+      {/* Enter a food item */}
       <form className="create-food-form" onSubmit={handleSubmit}>
         <div className="input-food-form">
           <label htmlFor="name" className="form-label">
@@ -78,16 +116,16 @@ const FoodList = () => {
             id="name"
             name="name"
           />
-          <label htmlFor="number" className="form-label">
-            Number
+          <label htmlFor="quantity" className="form-label">
+            Quantity
           </label>
           <input
             type="text"
             className="form-input"
-            value={food.number}
+            value={food.quantity}
             onChange={handleChange}
-            id="number"
-            name="number"
+            id="quantity"
+            name="quantity"
           />
           <label htmlFor="unitOfMeasure" className="form-label">
             Unit of Measure
@@ -104,26 +142,33 @@ const FoodList = () => {
         <button type="submit" className="btn">
           Submit
         </button>
-        </form>
+      </form>
 
-        {/* List the foods */}
-        <section id="list-foods-section">
-          <h3> Monday 30th April </h3>
-          <div className="container-food">
-            <ul className="list-food">
-              {createdFoods.map((food)=>{
-                // Set up key as id when we hit the server
-                return <CreatedFood key={food.id} food={food} removeItem={removeItem} updateItem={updateItem}/>
-              })}
-            </ul>
-          </div>
-        </section>
-        
-        {/* Delete All Foods */}
-        {createdFoods.length>0 && <button id="clear-list" onClick={clearFoodList}>
+      {/* List the foods */}
+      <section id="list-foods-section">
+        <h3> Monday 30th April </h3>
+        <div className="container-food">
+          <ul className="list-food">
+            {createdFoods.map((food) => {
+              return (
+                <CreatedFood
+                  key={food._id}
+                  food={food}
+                  removeItem={removeItem}
+                  updateItem={updateItem}
+                />
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* Delete All Foods */}
+      {createdFoods.length > 0 && (
+        <button id="clear-list" onClick={clearFoodList}>
           Clear All Foods
-        </button>}
-      
+        </button>
+      )}
     </>
   );
 };
