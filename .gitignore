@@ -2,3 +2,5 @@
 /frontend/react-app/node_modules
 .env
 .vscode
+*.local
+NOTES.md
