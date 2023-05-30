@@ -21,10 +21,16 @@ Then to run the server:
 `npm start` or `node ./dist/app`
 
 ## Frontend
-The app can be run with two different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other has been written use React js and is a single page application. The vanilla js is the default code that is served. It can also be served by pass in the `v` argument: 
+The app can be run with two different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other has been written use React js and is a single page application. The vanilla js is the default code that is served. It can also be served by passing in the `v` argument. Ensure you are in the backend folder and run,
 
-`npm start v` \ `npm run dev v` 
+`npm start -- v` \ `npm run dev -- v` 
 
-To serve up the react frontend the `r` argument can be used: 
+To serve up the react frontend the `r` argument can be used, 
 
-`npm start r` \ `npm run dev r`
+`npm start -- r` \ `npm run dev -- r`
+
+To just run the node server without serving up any static files,
+
+`npm start -- dev` \ `npm run dev -- dev` OR `npm start` \ `npm run dev`
+
+By default the server does not serve any static files.
