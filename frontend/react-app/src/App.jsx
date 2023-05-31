@@ -1,8 +1,7 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./shared_layout/AppLayout";
-import Home from "./pages/Home";
-import FoodList from "./pages/FoodList";
+import Home from "./pages/Home/Home";
+import FoodList from "./pages/FoodList/FoodList";
 
 function App() {
   return (

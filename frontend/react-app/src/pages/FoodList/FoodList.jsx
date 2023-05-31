@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import CreatedFood from "../components/CreatedFood";
+import CreatedFood from "../../components/CreatedFood/CreatedFood";
+
+import Styles from "./FoodListStyles.module.css";
 
 const initialFoodState = {
   _id: "",
@@ -103,69 +105,75 @@ const FoodList = () => {
   return (
     <>
       {/* Enter a food item */}
-      <form className="create-food-form" onSubmit={handleSubmit}>
-        <div className="input-food-form">
-          <label htmlFor="name" className="form-label">
-            Name
+      <div className={Styles.enter_list_food}>
+      <form className={Styles.create_food_form} onSubmit={handleSubmit}>
+        <div className={Styles.input_food_form}>
+          <label htmlFor="name" className={Styles.form_label}>
+            Name:
           </label>
           <input
-            type="text"
-            className="form-input"
-            value={food.name}
-            onChange={handleChange}
             id="name"
             name="name"
+            type="text"
+            className={Styles.form_input}
+            value={food.name}
+            onChange={handleChange}
           />
-          <label htmlFor="quantity" className="form-label">
-            Quantity
+          <label htmlFor="quantity" className={Styles.form_label}>
+            Quantity:
           </label>
           <input
-            type="text"
-            className="form-input"
-            value={food.quantity}
-            onChange={handleChange}
             id="quantity"
             name="quantity"
-          />
-          <label htmlFor="unitOfMeasure" className="form-label">
-            Unit of Measure
-          </label>
-          <input
             type="text"
-            className="form-input"
-            value={food.unitOfMeasure}
+            className={Styles.form_input}
+            value={food.quantity}
             onChange={handleChange}
+          />
+          <label htmlFor="unitOfMeasure" className={Styles.form_label}>
+            Unit of Measure:
+          </label>
+          <select
             id="unitOfMeasure"
             name="unitOfMeasure"
-          />
+            value={food.unitOfMeasure}
+            onChange={handleChange}
+            className={Styles.form_select}
+          >
+            <option value="grams">grams</option>
+            <option value="kg">kg</option>
+            <option value="units">units</option>
+            <option value="milli litres">milli litres</option>
+            <option value="litres">litres</option>
+            <option value="cups">cups</option>
+          </select>
+          <button type="submit" className={Styles.button}>
+            Submit
+          </button>
         </div>
-        <button type="submit" className="btn">
-          Submit
-        </button>
       </form>
 
       {/* List the foods */}
-      <section id="list-foods-section">
-        <h3> Monday 30th April </h3>
-        <div className="container-food">
-          <ul className="list-food">
-            {createdFoods.map((food) => {
-              return (
-                <CreatedFood
-                  key={food._id}
-                  food={food}
-                  removeItem={removeItem}
-                  updateItem={updateItem}
-                />
-              );
-            })}
-          </ul>
-        </div>
+      <section id={Styles.list_foods_section}>
+        <h3 id={Styles.list_foods_section_h3}> Monday 30th April </h3>
+        <ul className={Styles.food_list}>
+          {createdFoods.map((food) => {
+            return (
+              <CreatedFood
+                key={food._id}
+                food={food}
+                removeItem={removeItem}
+                updateItem={updateItem}
+              />
+            );
+          })}
+        </ul>
       </section>
+      </div>
 
       {/* Delete All Foods */}
       {createdFoods.length > 0 && (
-        <button id="clear-list" onClick={clearFoodList}>
+        <button onClick={clearFoodList} className={Styles.button}>
           Clear All Foods
         </button>
       )}
