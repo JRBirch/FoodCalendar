@@ -1,0 +1,16 @@
+@import "../../pages/FoodList/FoodListStyles.module.css";
+
+.created_food{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: space-between;
+    margin: 20px 0;
+    background: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 25px;
+    color: black;
+    width:max-content;
+    list-style-type: none;
+}
