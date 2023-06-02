@@ -1,14 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppLayout from "./shared_layout/AppLayout";
+import Home from "./pages/Home/Home";
+import {FoodList} from "./pages/FoodList/FoodList";
 
 function App() {
   return (
-    <>
-      <h2> Hello This Is My Typescript React App</h2>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Home />} />
+          <Route path="foodlist" element={<FoodList />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
