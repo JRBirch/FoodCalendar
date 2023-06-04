@@ -1,6 +1,6 @@
 import { Schema, model, isValidObjectId, HydratedDocument } from "mongoose";
 
-interface IFood {
+interface IFood{
     name: string;
     quantity: number;
     unitOfMeasure: string;

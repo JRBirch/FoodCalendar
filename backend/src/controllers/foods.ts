@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors/custom_error";
 import { IFood, Food, FoodDoc, isValidId } from "../models/food";
 
+
 const getAllFoods = async (req: Request, res: Response<FoodDoc[]>) => {
     const foods = await Food.find({});
     res.status(StatusCodes.OK).json(foods);
@@ -26,7 +27,7 @@ const createFood = async (req: Request<undefined, undefined, IFood>, res: Respon
 };
 
 /**
- * Onlt update the fields passed into the method editFood as it is a PATCH request.
+ * Only update the fields passed into the method editFood as it is a PATCH request.
  */
 const editFood = async (req: Request, res: Response<FoodDoc>) => {
     const {body: {quantity,unitOfMeasure}, params:{id:foodId}} = req;

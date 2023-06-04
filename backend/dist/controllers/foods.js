@@ -39,7 +39,7 @@ const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createFood = createFood;
 /**
- * Onlt update the fields passed into the method editFood as it is a PATCH request.
+ * Only update the fields passed into the method editFood as it is a PATCH request.
  */
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body: { quantity, unitOfMeasure }, params: { id: foodId } } = req;

@@ -1,9 +1,12 @@
 import express, { Express, Request, Response } from 'express';
 import "express-async-errors"; //Async wrapper
+import cookieParser from "cookie-parser";
 import connectDB from './db/connect';
 import foodsRouter from './routes/foods';
+import authRouter from './routes/auth';
 import notFound from './middleware/not_found';
 import errorHandlerMiddleware from './middleware/error_handler';
+import {authentication} from './middleware/authentication';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -31,9 +34,11 @@ if (process.argv[2] == "dev" || !process.argv[2]){
 }
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
-app.use("/api/v1/foods", foodsRouter)
+app.use("/api/v1/foods", authentication, foodsRouter)
+app.use("/api/v1/auth", authRouter)
 
 // Middleware
 app.use(notFound);
