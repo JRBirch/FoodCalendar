@@ -33,6 +33,11 @@ if (process.argv[2] == "r") {
     console.log("Serving the React js frontend ...");
     app.use(express_1.default.static(__dirname + '/../../frontend/react-app/dist'));
 }
+if (process.argv[2] == "rt") {
+    // React-Typescript frontend
+    console.log("Serving the React-Typescript frontend ...");
+    app.use(express_1.default.static(__dirname + '/../../frontend/react-app-ts/dist'));
+}
 if (process.argv[2] == "dev" || !process.argv[2]) {
     console.log("Serving up no static files in developer mode ...");
 }

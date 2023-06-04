@@ -1,0 +1,16 @@
+@import "../../vars.css";
+
+.nav{
+    padding: 1.5rem;
+    background-color: var(--green);
+    color: var(--cream);
+    display: flex;
+    justify-content: space-between;
+}
+
+.links{
+    padding:0.25rem;    
+    display: flex;
+    gap:1rem;
+}
+
