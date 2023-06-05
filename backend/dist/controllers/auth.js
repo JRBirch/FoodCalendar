@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.logout = exports.login = exports.register = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const user_1 = require("../models/user");
@@ -33,7 +33,7 @@ exports.register = register;
  * user name and JSON web token back to the client.
  */
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Logining User");
+    console.log("Logging User In");
     const { email, password } = req.body;
     if (!email || !password) {
         throw new custom_error_1.default("No password of email", http_status_codes_1.StatusCodes.BAD_REQUEST);
@@ -52,3 +52,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(http_status_codes_1.StatusCodes.OK).cookie("access_token", token, { httpOnly: true }).json({ user: { name: user.name } });
 });
 exports.login = login;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Logging User Out");
+    res.clearCookie("access_token").sendStatus(http_status_codes_1.StatusCodes.OK);
+});
+exports.logout = logout;

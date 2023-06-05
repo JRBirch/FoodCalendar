@@ -37,7 +37,7 @@ const login = async (
   req: Request<undefined, undefined, LoginRequest>,
   res: Response<AuthResponse>
 ) => {
-  console.log("Logining User");
+  console.log("Logging User In");
   const {email, password} = req.body;
   if (!email ||  !password){
     throw new CustomError("No password of email", StatusCodes.BAD_REQUEST);
@@ -56,4 +56,15 @@ const login = async (
   res.status(StatusCodes.OK).cookie("access_token", token, {httpOnly: true}).json({user: {name:user.name}})
 };
 
-export {register, login};
+/**
+ * Log out the user by removing the access_token cookie.
+ */
+const logout = async (
+  req: Request<undefined, undefined, {}>,
+  res: Response<undefined>
+) => {
+  console.log("Logging User Out")
+  res.clearCookie("access_token").sendStatus(StatusCodes.OK);
+}
+
+export {register, login, logout};
