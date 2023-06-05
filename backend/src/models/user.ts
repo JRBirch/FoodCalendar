@@ -6,7 +6,7 @@ interface IUser {
   name: string;
   email: string;
   password: string;
-  createJWT() : string;
+  createJWT(): string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -31,13 +31,13 @@ const userSchema = new Schema<IUser>({
 });
 
 /**
- * Before saving the password hash it so that it is 
+ * Before saving the password hash it so that it is
  * not exposed in the db.
  */
-userSchema.pre('save', async function () {
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-})
+userSchema.pre("save", async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 /**
  * Check whether the Id is valid
@@ -50,23 +50,23 @@ const isValidId = (id: string): boolean => {
 
 /**
  * Create the JSON web token.
- * @returns string 
+ * @returns string
  */
-userSchema.methods.createJWT = function():string {
-    return jwt.sign({userId:this._id, name:this.name}, process.env.JWT_SECRET as string, {
-        expiresIn:process.env.JWT_LIFETIME
-    })
-}
+userSchema.methods.createJWT = function (): string {
+  return jwt.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET as string, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
+};
 
 /**
  * Check whether the password is a match or not
  * @param candidatePassword The password be authenticated
  * @returns boolean indicating whether the password is a match
  */
-userSchema.methods.comparePassword = async function(candidatePassword:string): Promise<boolean>{
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    return isMatch;
-}
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
+};
 
 const User = model<IUser>("User", userSchema);
 

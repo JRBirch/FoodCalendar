@@ -4,28 +4,28 @@ import CustomError from "../errors/custom_error";
 import { IUser, User } from "../models/user";
 
 type AuthResponse = {
-    user: {
-        name: string
-    }
-}
+  user: {
+    name: string;
+  };
+};
 
 type LoginRequest = {
-    email: string, 
-    password: string
-}
+  email: string;
+  password: string;
+};
 
 /**
  * Register the user, which involves creating the user record, creating the JSON web token
  * then sending the name of the user and the token back to the client.
  */
-const register = async (
-  req: Request<undefined, undefined, IUser>,
-  res: Response<AuthResponse>
-) => {
+const register = async (req: Request<undefined, undefined, IUser>, res: Response<AuthResponse>) => {
   console.log("Registering User");
-  const user = await User.create({...req.body})
-  const token = user.createJWT()
-  res.cookie("access_token", token, {httpOnly: true}).status(StatusCodes.OK).json({user: {name: user.name}});
+  const user = await User.create({ ...req.body });
+  const token = user.createJWT();
+  res
+    .cookie("access_token", token, { httpOnly: true })
+    .status(StatusCodes.OK)
+    .json({ user: { name: user.name } });
 };
 
 /**
@@ -38,33 +38,33 @@ const login = async (
   res: Response<AuthResponse>
 ) => {
   console.log("Logging User In");
-  const {email, password} = req.body;
-  if (!email ||  !password){
+  const { email, password } = req.body;
+  if (!email || !password) {
     throw new CustomError("No password of email", StatusCodes.BAD_REQUEST);
   }
-  const user = await User.findOne({email});
-  if (!user){
+  const user = await User.findOne({ email });
+  if (!user) {
     console.log("No user");
     throw new CustomError("Invalid Credentials", StatusCodes.UNAUTHORIZED);
   }
   const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect){
+  if (!isPasswordCorrect) {
     console.log("Wrong password");
     throw new CustomError("Invalid Credentials", StatusCodes.UNAUTHORIZED);
   }
   const token = user.createJWT();
-  res.status(StatusCodes.OK).cookie("access_token", token, {httpOnly: true}).json({user: {name:user.name}})
+  res
+    .status(StatusCodes.OK)
+    .cookie("access_token", token, { httpOnly: true })
+    .json({ user: { name: user.name } });
 };
 
 /**
  * Log out the user by removing the access_token cookie.
  */
-const logout = async (
-  req: Request<undefined, undefined, {}>,
-  res: Response<undefined>
-) => {
-  console.log("Logging User Out")
+const logout = async (req: Request<undefined, undefined, {}>, res: Response<undefined>) => {
+  console.log("Logging User Out");
   res.clearCookie("access_token").sendStatus(StatusCodes.OK);
-}
+};
 
-export {register, login, logout};
+export { register, login, logout };

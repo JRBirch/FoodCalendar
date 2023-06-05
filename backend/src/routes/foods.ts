@@ -1,5 +1,5 @@
 import express from "express";
-import {getAllFoods, createFood, getSingleFood, editFood, deleteFood} from "../controllers/foods";
+import { getAllFoods, createFood, getSingleFood, editFood, deleteFood } from "../controllers/foods";
 const router = express.Router();
 
 router.route("/").get(getAllFoods);
