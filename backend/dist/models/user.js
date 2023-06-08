@@ -37,7 +37,7 @@ const userSchema = new mongoose_1.Schema({
  * Before saving the password hash it so that it is
  * not exposed in the db.
  */
-userSchema.pre('save', function () {
+userSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const salt = yield bcrypt_1.default.genSalt(10);
         this.password = yield bcrypt_1.default.hash(this.password, salt);
@@ -58,7 +58,7 @@ exports.isValidId = isValidId;
  */
 userSchema.methods.createJWT = function () {
     return jsonwebtoken_1.default.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_LIFETIME
+        expiresIn: process.env.JWT_LIFETIME,
     });
 };
 /**

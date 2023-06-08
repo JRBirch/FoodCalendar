@@ -9,7 +9,7 @@ type AuthResponse = {
   };
 };
 
-type LoginRequest = {
+type Login = {
   email: string;
   password: string;
 };
@@ -34,7 +34,7 @@ const register = async (req: Request<undefined, undefined, IUser>, res: Response
  * user name and JSON web token back to the client.
  */
 const login = async (
-  req: Request<undefined, undefined, LoginRequest>,
+  req: Request<undefined, undefined, Login>,
   res: Response<AuthResponse>
 ) => {
   console.log("Logging User In");
@@ -67,4 +67,4 @@ const logout = async (req: Request<undefined, undefined, {}>, res: Response<unde
   res.clearCookie("access_token").sendStatus(StatusCodes.OK);
 };
 
-export { register, login, logout };
+export { register, login, logout, type Login, type AuthResponse };

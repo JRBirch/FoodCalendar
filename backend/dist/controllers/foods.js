@@ -42,14 +42,17 @@ exports.createFood = createFood;
  * Only update the fields passed into the method editFood as it is a PATCH request.
  */
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body: { quantity, unitOfMeasure }, params: { id: foodId } } = req;
+    const { body: { quantity, unitOfMeasure }, params: { id: foodId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    if (quantity === '' || unitOfMeasure == '') {
+    if (quantity === "" || unitOfMeasure == "") {
         throw new custom_error_1.default(`Quantity or unit of measure field cannot be empty`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId }, req.body, { new: true, runValidators: true });
+    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId }, req.body, {
+        new: true,
+        runValidators: true,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }

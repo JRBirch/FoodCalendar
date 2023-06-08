@@ -24,7 +24,10 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Registering User");
     const user = yield user_1.User.create(Object.assign({}, req.body));
     const token = user.createJWT();
-    res.cookie("access_token", token, { httpOnly: true }).status(http_status_codes_1.StatusCodes.OK).json({ user: { name: user.name } });
+    res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(http_status_codes_1.StatusCodes.OK)
+        .json({ user: { name: user.name } });
 });
 exports.register = register;
 /**
@@ -49,9 +52,15 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         throw new custom_error_1.default("Invalid Credentials", http_status_codes_1.StatusCodes.UNAUTHORIZED);
     }
     const token = user.createJWT();
-    res.status(http_status_codes_1.StatusCodes.OK).cookie("access_token", token, { httpOnly: true }).json({ user: { name: user.name } });
+    res
+        .status(http_status_codes_1.StatusCodes.OK)
+        .cookie("access_token", token, { httpOnly: true })
+        .json({ user: { name: user.name } });
 });
 exports.login = login;
+/**
+ * Log out the user by removing the access_token cookie.
+ */
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Logging User Out");
     res.clearCookie("access_token").sendStatus(http_status_codes_1.StatusCodes.OK);
