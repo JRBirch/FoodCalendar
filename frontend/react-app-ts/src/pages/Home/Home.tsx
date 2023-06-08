@@ -1,4 +1,7 @@
+import { useGlobalContext } from "../../Context";
+
 const Home = () => {
-  return <h2>Welcome to Food App</h2>;
+  const { username } = useGlobalContext();
+  return <h2>Welcome to the Food App {username}!</h2>;
 };
 export default Home;
