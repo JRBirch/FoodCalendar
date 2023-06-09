@@ -15,6 +15,11 @@ const foodSchema = new mongoose_1.Schema({
         enum: ["grams", "kg", "units", "milli litres", "litres", "cups"],
         default: "units",
     },
+    createdBy: {
+        type: mongoose_1.Types.ObjectId,
+        ref: "User",
+        required: [true, "Please provide a user"]
+    }
 });
 const isValidId = (id) => {
     return (0, mongoose_1.isValidObjectId)(id);

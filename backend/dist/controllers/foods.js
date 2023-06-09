@@ -17,16 +17,20 @@ const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const food_1 = require("../models/food");
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const foods = yield food_1.Food.find({});
+    const foods = yield food_1.Food.find({ createdBy: req.user.userId });
     res.status(http_status_codes_1.StatusCodes.OK).json(foods);
 });
 exports.getAllFoods = getAllFoods;
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: foodId } = req.params;
+    // const { id: foodId } = req.params;
+    const { user: { userId }, params: { id: foodId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findById(foodId);
+    const food = yield food_1.Food.findOne({
+        _id: foodId,
+        createdBy: userId,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }
@@ -34,7 +38,7 @@ const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getSingleFood = getSingleFood;
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const createdFood = yield food_1.Food.create(req.body);
+    const createdFood = yield food_1.Food.create(Object.assign(Object.assign({}, req.body), { createdBy: req.user.userId }));
     res.status(http_status_codes_1.StatusCodes.CREATED).json(createdFood);
 });
 exports.createFood = createFood;
@@ -42,14 +46,14 @@ exports.createFood = createFood;
  * Only update the fields passed into the method editFood as it is a PATCH request.
  */
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body: { quantity, unitOfMeasure }, params: { id: foodId }, } = req;
+    const { body: { quantity, unitOfMeasure }, params: { id: foodId }, user: { userId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
     if (quantity === "" || unitOfMeasure == "") {
         throw new custom_error_1.default(`Quantity or unit of measure field cannot be empty`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId }, req.body, {
+    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId, createdBy: userId }, req.body, {
         new: true,
         runValidators: true,
     });
@@ -60,11 +64,14 @@ const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.editFood = editFood;
 const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: foodId } = req.params;
+    const { params: { id: foodId }, user: { userId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findByIdAndDelete(foodId);
+    const food = yield food_1.Food.findOneAndDelete({
+        _id: foodId,
+        createdBy: userId,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }

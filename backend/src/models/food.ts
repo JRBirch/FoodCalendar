@@ -1,9 +1,10 @@
-import { Schema, model, isValidObjectId, HydratedDocument } from "mongoose";
+import { Schema, model, isValidObjectId, HydratedDocument, ObjectId, Types } from "mongoose";
 
 interface IFood {
   name: string;
   quantity: number;
   unitOfMeasure: string;
+  createdBy: ObjectId;
 }
 
 type FoodDoc = HydratedDocument<IFood>;
@@ -21,6 +22,11 @@ const foodSchema = new Schema<IFood>({
     enum: ["grams", "kg", "units", "milli litres", "litres", "cups"],
     default: "units",
   },
+  createdBy: {
+    type: Types.ObjectId, 
+    ref: "User",
+    required: [true, "Please provide a user"]
+  }
 });
 
 const isValidId = (id: string): boolean => {
