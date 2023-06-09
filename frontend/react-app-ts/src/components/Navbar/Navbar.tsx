@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import NavbarStyles from "./NavbarStyles.module.css";
 import { useGlobalContext } from "../../Context";
+
+import NavbarStyles from "./NavbarStyles.module.css";
 
 const Navbar = () => {
   const { isLoggedIn, setIsLoggedIn, setUsername } = useGlobalContext();
@@ -33,12 +34,12 @@ const Navbar = () => {
 
       {/* Conditionally render login / log out button */}
       {isLoggedIn ? (
-        <div className="logout-button">
-          <button onClick={handleLogout}>Logout</button>
+        <div>
+          <button onClick={handleLogout} className={NavbarStyles.button}>Logout</button>
         </div>
       ) : (
-        <div className="login-button">
-          <button onClick={() => navigate("/login")}>Log In</button>
+        <div>
+          <button onClick={() => navigate("/login")} className={NavbarStyles.button}>Log In</button>
         </div>
       )}
     </nav>

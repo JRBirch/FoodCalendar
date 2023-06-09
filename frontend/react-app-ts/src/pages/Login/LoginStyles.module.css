@@ -1,17 +1,29 @@
 @import "../../vars.css";
 
-.nav{
-    padding: 1.5rem;
+.heading{
+    text-align: center;
+}
+.login_form {
     background-color: var(--green);
     color: var(--cream);
+    border-radius: 25px;
+    padding: 10px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.links{
-    padding:0.25rem;    
-    display: flex;
-    gap:1rem;
+.form_label{
+    font-weight: bold;
+    display:block;
+}
+
+.form_input{
+    padding:5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: var(--cream);
 }
 
 .button{

@@ -4,6 +4,8 @@ import axios from "axios";
 import { useGlobalContext } from "../../Context";
 import { useNavigate } from "react-router-dom";
 
+import LoginStyles from "./LoginStyles.module.css";
+
 const initialLoginInfo: Login = {
   email: "",
   password: "",
@@ -43,25 +45,33 @@ const LoginScreen = () => {
 
   return (
     <>
-      <div>Login</div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
+      <form onSubmit={handleSubmit} className={LoginStyles.login_form}>
+        <h3 className={LoginStyles.heading}>Login</h3>
+        <label htmlFor="email" className={LoginStyles.form_label}>
+          Email:
+        </label>
         <input
           id="email"
           name="email"
           type="text"
+          className={LoginStyles.form_input}
           value={loginInfo.email}
           onChange={handleChange}
         />
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password" className={LoginStyles.form_label}>
+          Password:
+        </label>
         <input
           id="password"
           name="password"
           type="text"
+          className={LoginStyles.form_input}
           value={loginInfo.password}
           onChange={handleChange}
         />
-        <button type="submit">Submit</button>
+        <button type="submit" className={LoginStyles.button}>
+          Submit
+        </button>
       </form>
     </>
   );

@@ -100,4 +100,10 @@
     margin: 2px;
     border-radius: 5px;
     box-shadow: 1px 1px 5px black;
+    max-width: max-content;
 }
+
+.button:active{
+    box-shadow: 1px 0px 15px black;
+}
+
