@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Login } from "../../../../../backend/src/controllers/auth";
 import axios from "axios";
 import { useGlobalContext } from "../../Context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import LoginStyles from "./LoginStyles.module.css";
 
@@ -45,7 +45,7 @@ const LoginScreen = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={LoginStyles.login_form}>
+      <form onSubmit={handleSubmit} className={LoginStyles.form}>
         <h3 className={LoginStyles.heading}>Login</h3>
         <label htmlFor="email" className={LoginStyles.form_label}>
           Email:
@@ -72,6 +72,7 @@ const LoginScreen = () => {
         <button type="submit" className={LoginStyles.button}>
           Submit
         </button>
+        <Link to="/register">Register</Link>
       </form>
     </>
   );

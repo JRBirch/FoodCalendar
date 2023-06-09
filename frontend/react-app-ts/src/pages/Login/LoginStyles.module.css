@@ -3,7 +3,7 @@
 .heading{
     text-align: center;
 }
-.login_form {
+.form {
     background-color: var(--green);
     color: var(--cream);
     border-radius: 25px;
