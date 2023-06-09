@@ -14,11 +14,17 @@ type Login = {
   password: string;
 };
 
+type Register = {
+  name: string,
+  email: string,
+  password: string
+}
+
 /**
  * Register the user, which involves creating the user record, creating the JSON web token
  * then sending the name of the user and the token back to the client.
  */
-const register = async (req: Request<undefined, undefined, IUser>, res: Response<AuthResponse>) => {
+const register = async (req: Request<undefined, undefined, Register>, res: Response<AuthResponse>) => {
   console.log("Registering User");
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
@@ -67,4 +73,4 @@ const logout = async (req: Request<undefined, undefined, {}>, res: Response<unde
   res.clearCookie("access_token").sendStatus(StatusCodes.OK);
 };
 
-export { register, login, logout, type Login, type AuthResponse };
+export { register, login, logout, type Login, type AuthResponse, type Register };
