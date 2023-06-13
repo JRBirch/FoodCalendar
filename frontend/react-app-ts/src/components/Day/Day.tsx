@@ -1,22 +1,28 @@
-import {FoodDoc} from "../../../../../backend/src/models/food"
+import { useNavigate } from "react-router-dom";
+
+import { dayString } from "../../utility/date";
+import { FoodDoc } from "../../../../../backend/src/models/food";
 
 import Styles from "./DayStyles.module.css";
 
 type Day = {
-  days: string[];
-  day: number;
   date: Date;
   foodsForDay: FoodDoc[];
-  handleClick: (date: Date) => void;
 };
 
-const CalendarDay = ({ handleClick, days, day, date, foodsForDay }: Day) => {
+const CalendarDay = ({ date, foodsForDay }: Day) => {
+  const navigate = useNavigate();
+
+  const handleClick = (date: Date) => {
+    navigate("/foodlist", { state: { date } });
+  };
+
   return (
     <div onClick={() => handleClick(date)} className={Styles.day}>
-      <h4>{`${days[date.getDay()]}, ${day}`}</h4>
+      <h4>{`${dayString(date.getDay())}, ${date.getDate()}`}</h4>
       <ul>
-        {foodsForDay.map((food)=>{
-            return <li className={Styles.food}>{food.name}</li>
+        {foodsForDay.map((food) => {
+          return <li className={Styles.food}>{food.name}</li>;
         })}
       </ul>
     </div>

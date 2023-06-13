@@ -1,31 +1,27 @@
 import { ReactElement, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
 
 import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/foods.ts";
 import Day from "../../components/Day/Day.tsx";
+import { daysInMonth, monthString } from "../../utility/date.tsx";
 
 import Styles from "./FoodCalendarStyles.module.css";
-
-const date = new Date();
 
 type CalendarDate = {
   month: number;
   year: number;
 };
 
+const date = new Date();
 const initialMonthAndYear: CalendarDate = {
   month: date.getMonth(),
   year: date.getFullYear(),
 };
 
 const FoodCalendar = () => {
-  // Create an object to keep track of the day and month
   const [monthAndYear, setMonthAndYear] = useState<CalendarDate>(initialMonthAndYear);
-  const [foodsGroupedDate, setFoodsGroupedDate] = useState<RecordsGroupedByDate>({})
-
-  const navigate = useNavigate();
+  const [foodsGroupedDate, setFoodsGroupedDate] = useState<RecordsGroupedByDate>({});
 
   const increaseMonth = () => {
     let month = monthAndYear.month + 1;
@@ -45,14 +41,6 @@ const FoodCalendar = () => {
     } else {
       setMonthAndYear({ ...monthAndYear, month });
     }
-  };
-
-  const handleClick = (date: Date) => {
-    navigate("/foodlist", { state: { date } });
-  };
-
-  const daysInMonth = (month: number, year: number) => {
-    return new Date(year, month + 1, 0).getDate();
   };
 
   const fetchData = async (): Promise<void> => {
@@ -77,39 +65,21 @@ const FoodCalendar = () => {
     fetchData();
   }, [monthAndYear.month]);
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
   const day_elements: ReactElement[] = [];
   for (let i = 1; i <= daysInMonth(monthAndYear.month, monthAndYear.year); i++) {
     let date = new Date(monthAndYear.year, monthAndYear.month, i);
-    let day = date.getDate();
-    // Only send 4 items per day
-    let foods = foodsGroupedDate[date.toISOString()]
-    if (foods === undefined){
-      foods = []
-    } 
-    day_elements.push(<Day day={day} date={date} handleClick={handleClick} days={days} foodsForDay={foods}/>);
+    let foods = foodsGroupedDate[date.toISOString()];
+    if (foods === undefined) {
+      foods = [];
+    }
+    day_elements.push(<Day date={date} foodsForDay={foods} />);
   }
 
   return (
     <>
       <div className={Styles.month}>
         <AiOutlineArrowLeft onClick={decreaseMonth} />
-        <h2 className={Styles.month_heading}>{`${months[monthAndYear.month]} ${
+        <h2 className={Styles.month_heading}>{`${monthString(monthAndYear.month)} ${
           monthAndYear.year
         }`}</h2>
         <AiOutlineArrowRight onClick={increaseMonth} />
