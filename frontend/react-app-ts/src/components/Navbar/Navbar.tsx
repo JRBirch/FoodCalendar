@@ -30,7 +30,7 @@ const Navbar = () => {
       <h1>Food App</h1>
       <div className={NavbarStyles.links}>
         <Link to="/">Home</Link>
-        <Link to="/foodlist">FoodList</Link>
+        <Link to="/calendar">Calendar</Link>
       </div>
 
       {/* Conditionally render login / log out button */}

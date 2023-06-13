@@ -3,13 +3,35 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors/custom_error";
 import { IFood, Food, FoodDoc, isValidId } from "../models/food";
 
+
+// TODO: Add better typing for the incoming requests, then can use these types in the frontend as well
+
+// When fetching all the foods the date goes in the query because we want to return 
+// an empty string if nothing is found.
+
+type Searchquery = {
+  createdBy: string,
+  date?: string | { $gte: string, $lte: string,},
+}
 const getAllFoods = async (req: Request, res: Response<FoodDoc[]>) => {
-  const foods = await Food.find({ createdBy: req.user.userId });
-  res.status(StatusCodes.OK).json(foods);
+  const query: Searchquery = {createdBy: req.user.userId}
+  if (req.query.date){
+    query.date = String(req.query.date)
+  }
+  if (req.query.from && req.query.to){
+    query.date = { $gte: String(req.query.from), $lte: String(req.query.to),}
+  }
+  let foods = Food.find(query);
+  if (req.query.limit){
+    foods = foods.limit(Number(req.query.limit))
+  }
+  const result = await foods;
+  res.status(StatusCodes.OK).json(result);
 };
 
+// We do not need to add the date information in here, as we are already searching for the food by
+// it's unique identifier
 const getSingleFood = async (req: Request, res: Response<FoodDoc>) => {
-  // const { id: foodId } = req.params;
   const {
     user: { userId },
     params: { id: foodId },
@@ -27,13 +49,15 @@ const getSingleFood = async (req: Request, res: Response<FoodDoc>) => {
   res.status(StatusCodes.OK).json(food);
 };
 
+// When creating a food the date should go in the request body
 const createFood = async (req: Request<undefined, undefined, IFood>, res: Response<FoodDoc>) => {
-  const createdFood: FoodDoc = await Food.create({ ...req.body, createdBy: req.user.userId });
+  const createdFood: FoodDoc = await Food.create({ ...req.body, createdBy: req.user.userId});
   res.status(StatusCodes.CREATED).json(createdFood);
 };
 
 /**
  * Only update the fields passed into the method editFood as it is a PATCH request.
+ * Here we do not need the date information as we are passing in the food by its unique identifier 
  */
 const editFood = async (req: Request, res: Response<FoodDoc>) => {
   const {
@@ -51,7 +75,7 @@ const editFood = async (req: Request, res: Response<FoodDoc>) => {
     );
   }
 
-  const food = await Food.findByIdAndUpdate({ _id: foodId, createdBy: userId }, req.body, {
+  const food = await Food.findOneAndUpdate({ _id: foodId, createdBy: userId}, req.body, {
     new: true,
     runValidators: true,
   });
@@ -62,6 +86,8 @@ const editFood = async (req: Request, res: Response<FoodDoc>) => {
   res.status(StatusCodes.OK).json(food);
 };
 
+// Here we do not need date information as we are already searching for the food by it's
+// unique identiifer.
 const deleteFood = async (req: Request, res: Response<FoodDoc>) => {
   const {
     params: { id: foodId },

@@ -1,10 +1,11 @@
-import { Schema, model, isValidObjectId, HydratedDocument, ObjectId, Types } from "mongoose";
+import { Schema, model, isValidObjectId, HydratedDocument, ObjectId, Types, Date } from "mongoose";
 
 interface IFood {
   name: string;
   quantity: number;
   unitOfMeasure: string;
   createdBy: ObjectId;
+  date: Date;  //YYYY-MM-DD
 }
 
 type FoodDoc = HydratedDocument<IFood>;
@@ -26,6 +27,10 @@ const foodSchema = new Schema<IFood>({
     type: Types.ObjectId, 
     ref: "User",
     required: [true, "Please provide a user"]
+  },
+  date: {
+    type: Date,
+    required: [true, "Please provide a date"]
   }
 });
 

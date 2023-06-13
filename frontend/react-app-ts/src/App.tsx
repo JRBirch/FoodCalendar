@@ -5,6 +5,7 @@ import { FoodList } from "./pages/FoodList/FoodList";
 import { LoginScreen } from "./pages/Login/Login";
 import RegisterScreen  from "./pages/Register/Register";
 import ProtectedRoutes from "./ProtectedRoutes";
+import FoodCalendar from "./pages/Calendar/FoodCalendar";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="register" element={<RegisterScreen/>}/>
           <Route path="login" element={<LoginScreen />} />
           <Route path="" element={<ProtectedRoutes />}>
+            <Route path="calendar" element={<FoodCalendar/>} />
             <Route path="foodlist" element={<FoodList />} />
           </Route>
         </Route>

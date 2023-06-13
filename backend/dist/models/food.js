@@ -19,6 +19,10 @@ const foodSchema = new mongoose_1.Schema({
         type: mongoose_1.Types.ObjectId,
         ref: "User",
         required: [true, "Please provide a user"]
+    },
+    date: {
+        type: Date,
+        required: [true, "Please provide a date"]
     }
 });
 const isValidId = (id) => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CreatedFood from "../../components/CreatedFood/CreatedFood";
 
@@ -32,6 +33,8 @@ const initialFoodState: Food = {
 const FoodList = () => {
   const [food, setFood] = useState(initialFoodState);
   const [createdFoods, setCreatedFoods] = useState<Food[]>([]);
+
+  const {state:{date}} = useLocation();
 
   const updateItem = async (food: Food) => {
     try {
@@ -67,6 +70,7 @@ const FoodList = () => {
         name: food.name,
         quantity: food.quantity,
         unitOfMeasure: food.unitOfMeasure,
+        date: date.toString()
       });
       const createdFood = resp.data;
       setCreatedFoods([...createdFoods, createdFood]);
@@ -104,7 +108,7 @@ const FoodList = () => {
 
   const fetchFoods = async () => {
     try {
-      const resp = await axios.get("/api/v1/foods");
+      const resp = await axios.get("/api/v1/foods", {params:{date: date.toString()}});
       const foods = resp.data;
       setCreatedFoods(foods);
     } catch (error) {
@@ -115,6 +119,9 @@ const FoodList = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFood({ ...food, [e.target.name]: e.target.value });
   };
+
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
   return (
     <>
@@ -169,7 +176,7 @@ const FoodList = () => {
 
       {/* List the foods */}
       <section id={Styles.list_foods_section}>
-        <h3 id={Styles.list_foods_section_h3}> Monday 30th April </h3>
+        <h3 id={Styles.list_foods_section_h3}> {`${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`} </h3>
         <ul className={Styles.food_list}>
           {createdFoods.map((food) => {
             return (

@@ -1,0 +1,20 @@
+@import "../../vars.css";
+
+.day{
+    width: 11rem;
+    height: 11rem;
+    padding: 1rem;
+    background-color: var(--green);
+    color: var(--cream);
+    border-radius: 25px;
+    text-align: center;
+}
+
+.food{
+    background-color: var(--cream);
+    color: black;
+    list-style-type: none;
+    border-radius: 25px;
+    margin: 0.5rem;
+    padding: 0.1rem;
+}
