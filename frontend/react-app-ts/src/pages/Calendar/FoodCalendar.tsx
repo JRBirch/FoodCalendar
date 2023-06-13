@@ -61,16 +61,11 @@ const FoodCalendar = () => {
       const from = new Date(monthAndYear.year, monthAndYear.month, 1);
       const to = new Date(monthAndYear.year, monthAndYear.month, noDays);
       const resp = await axios.get("/api/v1/foods", {
-        params: { from, to },
+        params: { from, to, limit: 4 },
       });
       const foods = resp.data;
       // Group the data by date
-      const groupedFoods = foods.reduce((object: {[date: string]: FoodDoc[]}, food: FoodDoc) => {
-        object[String(food.date)] = object[String(food.date)] || [];
-        object[String(food.date)].push(food);
-        return object;
-      }, {});
-      setFoodsGroupedDate(groupedFoods);
+      setFoodsGroupedDate(foods);
     } catch (error) {
       console.log(error);
     }
@@ -108,10 +103,6 @@ const FoodCalendar = () => {
     if (foods === undefined){
       foods = []
     } 
-    if (foods.length > 4){
-      foods = foods.slice(0,4);
-    }
-    console.log(foods);
     day_elements.push(<Day day={day} date={date} handleClick={handleClick} days={days} foodsForDay={foods}/>);
   }
 
