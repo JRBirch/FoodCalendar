@@ -2,8 +2,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
-import { FoodDoc } from "../../../../../backend/src/models/food.ts";
 
+import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/foods.ts";
 import Day from "../../components/Day/Day.tsx";
 
 import Styles from "./FoodCalendarStyles.module.css";
@@ -23,7 +23,7 @@ const initialMonthAndYear: CalendarDate = {
 const FoodCalendar = () => {
   // Create an object to keep track of the day and month
   const [monthAndYear, setMonthAndYear] = useState<CalendarDate>(initialMonthAndYear);
-  const [foodsGroupedDate, setFoodsGroupedDate] = useState<{[date: string]: FoodDoc[]}>({})
+  const [foodsGroupedDate, setFoodsGroupedDate] = useState<RecordsGroupedByDate>({})
 
   const navigate = useNavigate();
 
@@ -63,8 +63,7 @@ const FoodCalendar = () => {
       const resp = await axios.get("/api/v1/foods", {
         params: { from, to, limit: 4 },
       });
-      const foods = resp.data;
-      // Group the data by date
+      const foods: RecordsGroupedByDate = resp.data;
       setFoodsGroupedDate(foods);
     } catch (error) {
       console.log(error);
