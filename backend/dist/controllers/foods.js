@@ -21,15 +21,29 @@ const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (req.query.date) {
         query.date = String(req.query.date);
     }
-    if (req.query.from && req.query.to) {
-        query.date = { $gte: String(req.query.from), $lte: String(req.query.to), };
+    else if (req.query.from && req.query.to) {
+        query.date = { $gte: String(req.query.from), $lte: String(req.query.to) };
     }
     let foods = food_1.Food.find(query);
-    if (req.query.limit) {
+    if (req.query.limit && !req.query.from && !req.query.to) {
         foods = foods.limit(Number(req.query.limit));
     }
-    const result = yield foods;
-    res.status(http_status_codes_1.StatusCodes.OK).json(result);
+    let result = yield foods;
+    if (req.query.limit && req.query.from && req.query.to) {
+        const groupedresult = result.reduce((object, food) => {
+            const date = new Date(String(food.date));
+            object[date.toISOString()] = object[date.toISOString()] || [];
+            if (object[date.toISOString()].length >= Number(req.query.limit)) {
+                return object;
+            }
+            object[date.toISOString()].push(food);
+            return object;
+        }, {});
+        res.status(http_status_codes_1.StatusCodes.OK).json(groupedresult);
+    }
+    else {
+        res.status(http_status_codes_1.StatusCodes.OK).json(result);
+    }
 });
 exports.getAllFoods = getAllFoods;
 // We do not need to add the date information in here, as we are already searching for the food by
