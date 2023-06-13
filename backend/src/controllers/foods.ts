@@ -5,14 +5,23 @@ import { IFood, Food, FoodDoc, isValidId } from "../models/food";
 
 // TODO: Add better typing for the incoming requests, then can use these types in the frontend as well
 
-// When fetching all the foods the date goes in the query because we want to return
-// an empty string if nothing is found.
-
 type Searchquery = {
   createdBy: string;
   date?: string | { $gte: string; $lte: string };
 };
-const getAllFoods = async (req: Request, res: Response<FoodDoc[] | {[date: string]: FoodDoc[]}>) => {
+
+type RecordsGroupedByDate = { [ISOdate: string]: FoodDoc[] }
+
+/**
+ * Endpoint expects either a date OR a from/to, if both are given then date takes precedence
+ * Can also limit the results, if a date & limit are provided then the number of products returned will
+ * be less than or equal to the limit. If a from/to & limit are provided then the number of 
+ * products per date will be limited.
+ */
+const getAllFoods = async (
+  req: Request,
+  res: Response<FoodDoc[] | RecordsGroupedByDate>
+) => {
   const query: Searchquery = { createdBy: req.user.userId };
   if (req.query.date) {
     query.date = String(req.query.date);
@@ -24,12 +33,12 @@ const getAllFoods = async (req: Request, res: Response<FoodDoc[] | {[date: strin
     foods = foods.limit(Number(req.query.limit));
   }
   let result = await foods;
-  if (req.query.limit && req.query.from && req.query.to){
-    const groupedresult = result.reduce((object: {[date: string]: FoodDoc[]}, food: FoodDoc) => {
-      const date = new Date(String(food.date))
+  if (req.query.limit && req.query.from && req.query.to) {
+    const groupedresult = result.reduce((object: RecordsGroupedByDate, food: FoodDoc) => {
+      const date = new Date(String(food.date));
       object[date.toISOString()] = object[date.toISOString()] || [];
-      if (object[date.toISOString()].length >= Number(req.query.limit)){
-        return object
+      if (object[date.toISOString()].length >= Number(req.query.limit)) {
+        return object;
       }
       object[date.toISOString()].push(food);
       return object;
@@ -119,4 +128,4 @@ const deleteFood = async (req: Request, res: Response<FoodDoc>) => {
   res.status(StatusCodes.OK).json(food);
 };
 
-export { getAllFoods, createFood, getSingleFood, editFood, deleteFood };
+export { getAllFoods, createFood, getSingleFood, editFood, deleteFood, type RecordsGroupedByDate };

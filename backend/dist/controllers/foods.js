@@ -16,6 +16,12 @@ exports.deleteFood = exports.editFood = exports.getSingleFood = exports.createFo
 const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const food_1 = require("../models/food");
+/**
+ * Endpoint expects either a date OR a from/to, if both are given then date takes precedence
+ * Can also limit the results, if a date & limit are provided then the number of products returned will
+ * be less than or equal to the limit. If a from/to & limit are provided then the number of
+ * products per date will be limited.
+ */
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = { createdBy: req.user.userId };
     if (req.query.date) {
