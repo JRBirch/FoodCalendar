@@ -5,15 +5,15 @@ import { useGlobalContext } from "../../Context";
 import NavbarStyles from "./NavbarStyles.module.css";
 
 const Navbar = () => {
-  const { isLoggedIn, setIsLoggedIn, setUsername } = useGlobalContext();
+  const { isLoggedIn, setAndClearIsLoggedIn, setAndClearUsername } = useGlobalContext();
 
   const navigate = useNavigate();
 
   const logoutUser = async (): Promise<void> => {
     try {
       await axios.post("/api/v1/auth/logout", {});
-      setIsLoggedIn(false);
-      setUsername("");
+      setAndClearIsLoggedIn(false);
+      setAndClearUsername("");
     } catch (error) {
       console.log(error);
     }
