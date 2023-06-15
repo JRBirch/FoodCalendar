@@ -14,7 +14,7 @@ const CalendarDay = ({ date, foodsForDay }: Day) => {
   const navigate = useNavigate();
 
   const handleClick = (date: Date) => {
-    navigate("/foodlist", { state: { date } });
+    navigate(`/foodlist/${date.toISOString()}`);
   };
 
   return (

@@ -17,7 +17,7 @@ function App() {
           <Route path="login" element={<LoginScreen />} />
           <Route path="" element={<ProtectedRoutes />}>
             <Route path="calendar" element={<FoodCalendar />} />
-            <Route path="foodlist" element={<FoodList />} />
+            <Route path="foodlist/:date" element={<FoodList />} />
           </Route>
         </Route>
       </Routes>

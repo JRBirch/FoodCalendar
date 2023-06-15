@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
+
 import CreatedFood from "../../components/CreatedFood/CreatedFood";
 
 import Styles from "./FoodListStyles.module.css";
@@ -34,7 +36,8 @@ const FoodList = () => {
   const [food, setFood] = useState(initialFoodState);
   const [createdFoods, setCreatedFoods] = useState<Food[]>([]);
 
-  const {state:{date}} = useLocation();
+  const params = useParams()
+  const date = moment(params.date, moment.ISO_8601, true).isValid() &&   params.date?new Date(params.date):new Date();
 
   const updateItem = async (food: Food) => {
     try {
