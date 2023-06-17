@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { dayString } from "../../utility/date";
+import { dayString, sameDay } from "../../utility/date";
 import { FoodDoc } from "../../../../../backend/src/models/food";
 
 import Styles from "./DayStyles.module.css";
@@ -17,9 +17,13 @@ const CalendarDay = ({ date, foodsForDay }: Day) => {
     navigate(`/foodlist/${date.toISOString()}`);
   };
 
+  const today = new Date();
+
   return (
     <div onClick={() => handleClick(date)} className={Styles.day}>
-      <h4>{`${dayString(date.getDay())}, ${date.getDate()}`}</h4>
+      <h4
+        className={`${Styles.heading} ${sameDay(today, date) ? Styles.today_heading : ""}`}
+      >{`${dayString(date.getDay())}, ${date.getDate()}`}</h4>
       <ul>
         {foodsForDay.map((food) => {
           return <li className={Styles.food}>{food.name}</li>;

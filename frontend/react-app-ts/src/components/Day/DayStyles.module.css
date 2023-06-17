@@ -10,6 +10,10 @@
     text-align: center;
 }
 
+.day:hover{
+    background-color: var(--hover-color);
+}
+
 .food{
     background-color: var(--cream);
     color: black;
@@ -17,4 +21,13 @@
     border-radius: 25px;
     margin: 0.5rem;
     padding: 0.1rem;
+}
+
+.heading{
+    border-radius: 25px;
+    padding: 0.25rem;
+}
+
+.today_heading{
+    background-color: var(--highlight-color);
 }
