@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppLayout from "./shared_layout/AppLayout";
+import AppLayout from "./shared_layouts/AppLayout";
 import Home from "./pages/Home/Home";
 import { FoodList } from "./pages/FoodList/FoodList";
 import { LoginScreen } from "./pages/Login/Login";
 import RegisterScreen from "./pages/Register/Register";
-import ProtectedRoutes from "./shared_layout/ProtectedRoutes";
+import ProtectedRoutes from "./shared_layouts/ProtectedRoutes";
 import FoodCalendar from "./pages/Calendar/FoodCalendar";
 
 function App() {
