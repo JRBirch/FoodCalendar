@@ -43,7 +43,7 @@ const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
           </label> */}
           <input
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.name_input}`}
             value={localFood.name}
             onChange={handleChange}
             id="name"
@@ -54,7 +54,7 @@ const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
           </label> */}
           <input
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.quantity_input}`}
             value={localFood.quantity}
             onChange={handleChange}
             id="quantity"

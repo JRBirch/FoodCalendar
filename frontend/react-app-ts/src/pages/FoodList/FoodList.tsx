@@ -139,7 +139,7 @@ const FoodList = () => {
             id="name"
             name="name"
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.name_input}`}
             value={food.name}
             onChange={handleChange}
           />
@@ -150,7 +150,7 @@ const FoodList = () => {
             id="quantity"
             name="quantity"
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.quantity_input}`}
             value={food.quantity}
             onChange={handleChange}
           />
