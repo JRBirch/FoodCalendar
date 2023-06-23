@@ -1,7 +1,8 @@
 @import "../../vars.css";
 
 .enter_list_food{
-    height: 95%;
+    min-height: 80vh;
+    width: 85%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,6 +35,14 @@
     background-color: var(--cream);
 }
 
+.name_input{
+    width: 7rem;
+}
+
+.quantity_input{
+    width: 3rem;
+}
+
 .form_select{
     padding:5px;
     border: 1px solid black;
@@ -47,7 +56,6 @@
     background: var(--green);
     border-radius: 25px;
     padding: 30px;
-    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -85,11 +93,12 @@
 
 .food_list{
     width: 100%;
+    height: 100%;
     display:flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-content: flex-start;
     gap: 0.5rem;
-    overflow-y: scroll;
 }
 
 .button{
@@ -100,4 +109,10 @@
     margin: 2px;
     border-radius: 5px;
     box-shadow: 1px 1px 5px black;
+    max-width: max-content;
 }
+
+.button:active{
+    box-shadow: 1px 0px 15px black;
+}
+

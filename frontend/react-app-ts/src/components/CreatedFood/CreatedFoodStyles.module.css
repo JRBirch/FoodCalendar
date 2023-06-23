@@ -10,6 +10,7 @@
     padding: 10px;
     border-radius: 25px;
     color: black;
+    height: max-content;
     width:max-content;
     list-style-type: none;
 }

@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
+
 import CreatedFood from "../../components/CreatedFood/CreatedFood";
 
 import Styles from "./FoodListStyles.module.css";
@@ -32,6 +35,9 @@ const initialFoodState: Food = {
 const FoodList = () => {
   const [food, setFood] = useState(initialFoodState);
   const [createdFoods, setCreatedFoods] = useState<Food[]>([]);
+
+  const params = useParams()
+  const date = moment(params.date, moment.ISO_8601, true).isValid() &&   params.date?new Date(params.date):new Date();
 
   const updateItem = async (food: Food) => {
     try {
@@ -67,6 +73,7 @@ const FoodList = () => {
         name: food.name,
         quantity: food.quantity,
         unitOfMeasure: food.unitOfMeasure,
+        date: date.toString()
       });
       const createdFood = resp.data;
       setCreatedFoods([...createdFoods, createdFood]);
@@ -104,7 +111,7 @@ const FoodList = () => {
 
   const fetchFoods = async () => {
     try {
-      const resp = await axios.get("/api/v1/foods");
+      const resp = await axios.get("/api/v1/foods", {params:{date: date.toString()}});
       const foods = resp.data;
       setCreatedFoods(foods);
     } catch (error) {
@@ -115,6 +122,9 @@ const FoodList = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFood({ ...food, [e.target.name]: e.target.value });
   };
+
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
   return (
     <>
@@ -129,7 +139,7 @@ const FoodList = () => {
             id="name"
             name="name"
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.name_input}`}
             value={food.name}
             onChange={handleChange}
           />
@@ -140,7 +150,7 @@ const FoodList = () => {
             id="quantity"
             name="quantity"
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.quantity_input}`}
             value={food.quantity}
             onChange={handleChange}
           />
@@ -169,7 +179,7 @@ const FoodList = () => {
 
       {/* List the foods */}
       <section id={Styles.list_foods_section}>
-        <h3 id={Styles.list_foods_section_h3}> Monday 30th April </h3>
+        <h3 id={Styles.list_foods_section_h3}> {`${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`} </h3>
         <ul className={Styles.food_list}>
           {createdFoods.map((food) => {
             return (

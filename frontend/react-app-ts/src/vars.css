@@ -2,4 +2,6 @@
 :root{
     --green: rgb(1, 69, 1);
     --cream: rgb(240, 238, 226);
+    --hover-color: rgb(3, 176, 72);
+    --highlight-color: rgb(3, 176, 72);
 }

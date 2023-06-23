@@ -1,0 +1,23 @@
+@import "../../vars.css";
+
+.month{
+    margin: 0.5rem;
+    display:flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.month_heading{
+    width: 15rem;
+    text-align: center;
+}
+
+.calendar{
+    flex-direction:row;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}

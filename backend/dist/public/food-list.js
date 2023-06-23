@@ -17,15 +17,19 @@ const submitBtn = document.querySelector(".submit-btn");
 const foodName = document.querySelector("#name");
 const quantity = document.querySelector("#quantity");
 const unitOfMeasure = document.querySelector("#unit-of-measure");
-submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener('click', (e) => {
+submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    const food = { name: foodName.value, quantity: quantity.value, unitOfMeasure: unitOfMeasure.value };
+    const food = {
+        name: foodName.value,
+        quantity: quantity.value,
+        unitOfMeasure: unitOfMeasure.value,
+    };
     createFood(food);
     // Use axios here to ping the server
 });
 const createFood = (food) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield axios_1.default.post('/api/v1/foods/', food);
+        const user = yield axios_1.default.post("/api/v1/foods/", food);
         console.log(`Food was created ${user}`);
     }
     catch (e) {
@@ -33,5 +37,5 @@ const createFood = (food) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 // As we are using commonjs this is not compatible with most browsers i.e. we cannot use require()
-// We probably have to compile the frontend typescript code in another directory 
-// Then have two compilers running to compile one code to another 
+// We probably have to compile the frontend typescript code in another directory
+// Then have two compilers running to compile one code to another

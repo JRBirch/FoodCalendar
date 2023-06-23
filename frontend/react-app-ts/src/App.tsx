@@ -1,7 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppLayout from "./shared_layout/AppLayout";
+import AppLayout from "./shared_layouts/AppLayout";
 import Home from "./pages/Home/Home";
-import {FoodList} from "./pages/FoodList/FoodList";
+import { FoodList } from "./pages/FoodList/FoodList";
+import { LoginScreen } from "./pages/Login/Login";
+import RegisterScreen from "./pages/Register/Register";
+import ProtectedRoutes from "./shared_layouts/ProtectedRoutes";
+import FoodCalendar from "./pages/Calendar/FoodCalendar";
 
 function App() {
   return (
@@ -9,7 +13,12 @@ function App() {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Home />} />
-          <Route path="foodlist" element={<FoodList />} />
+          <Route path="register" element={<RegisterScreen />} />
+          <Route path="login" element={<LoginScreen />} />
+          <Route path="" element={<ProtectedRoutes />}>
+            <Route path="calendar" element={<FoodCalendar />} />
+            <Route path="foodlist/:date" element={<FoodList />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

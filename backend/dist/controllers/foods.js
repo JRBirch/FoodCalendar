@@ -16,52 +16,98 @@ exports.deleteFood = exports.editFood = exports.getSingleFood = exports.createFo
 const http_status_codes_1 = require("http-status-codes");
 const custom_error_1 = __importDefault(require("../errors/custom_error"));
 const food_1 = require("../models/food");
+/**
+ * Endpoint expects either a date OR a from/to, if both are given then date takes precedence
+ * Can also limit the results, if a date & limit are provided then the number of products returned will
+ * be less than or equal to the limit. If a from/to & limit are provided then the number of
+ * products per date will be limited.
+ */
 const getAllFoods = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const foods = yield food_1.Food.find({});
-    res.status(http_status_codes_1.StatusCodes.OK).json(foods);
+    const query = { createdBy: req.user.userId };
+    if (req.query.date) {
+        query.date = String(req.query.date);
+    }
+    else if (req.query.from && req.query.to) {
+        query.date = { $gte: String(req.query.from), $lte: String(req.query.to) };
+    }
+    let foods = food_1.Food.find(query);
+    if (req.query.limit && !req.query.from && !req.query.to) {
+        foods = foods.limit(Number(req.query.limit));
+    }
+    let result = yield foods;
+    if (req.query.limit && req.query.from && req.query.to) {
+        const groupedresult = result.reduce((object, food) => {
+            const date = new Date(String(food.date));
+            object[date.toISOString()] = object[date.toISOString()] || [];
+            if (object[date.toISOString()].length >= Number(req.query.limit)) {
+                return object;
+            }
+            object[date.toISOString()].push(food);
+            return object;
+        }, {});
+        res.status(http_status_codes_1.StatusCodes.OK).json(groupedresult);
+    }
+    else {
+        res.status(http_status_codes_1.StatusCodes.OK).json(result);
+    }
 });
 exports.getAllFoods = getAllFoods;
+// We do not need to add the date information in here, as we are already searching for the food by
+// it's unique identifier
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: foodId } = req.params;
+    const { user: { userId }, params: { id: foodId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findById(foodId);
+    const food = yield food_1.Food.findOne({
+        _id: foodId,
+        createdBy: userId,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }
     res.status(http_status_codes_1.StatusCodes.OK).json(food);
 });
 exports.getSingleFood = getSingleFood;
+// When creating a food the date should go in the request body
 const createFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const createdFood = yield food_1.Food.create(req.body);
+    const createdFood = yield food_1.Food.create(Object.assign(Object.assign({}, req.body), { createdBy: req.user.userId }));
     res.status(http_status_codes_1.StatusCodes.CREATED).json(createdFood);
 });
 exports.createFood = createFood;
 /**
- * Onlt update the fields passed into the method editFood as it is a PATCH request.
+ * Only update the fields passed into the method editFood as it is a PATCH request.
+ * Here we do not need the date information as we are passing in the food by its unique identifier
  */
 const editFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body: { quantity, unitOfMeasure }, params: { id: foodId } } = req;
+    const { body: { quantity, unitOfMeasure }, params: { id: foodId }, user: { userId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    if (quantity === '' || unitOfMeasure == '') {
+    if (quantity === "" || unitOfMeasure == "") {
         throw new custom_error_1.default(`Quantity or unit of measure field cannot be empty`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findByIdAndUpdate({ _id: foodId }, req.body, { new: true, runValidators: true });
+    const food = yield food_1.Food.findOneAndUpdate({ _id: foodId, createdBy: userId }, req.body, {
+        new: true,
+        runValidators: true,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }
     res.status(http_status_codes_1.StatusCodes.OK).json(food);
 });
 exports.editFood = editFood;
+// Here we do not need date information as we are already searching for the food by it's
+// unique identiifer.
 const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: foodId } = req.params;
+    const { params: { id: foodId }, user: { userId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
         throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
-    const food = yield food_1.Food.findByIdAndDelete(foodId);
+    const food = yield food_1.Food.findOneAndDelete({
+        _id: foodId,
+        createdBy: userId,
+    });
     if (!food) {
         throw new custom_error_1.default(`No food found with id ${foodId}`, http_status_codes_1.StatusCodes.NOT_FOUND);
     }

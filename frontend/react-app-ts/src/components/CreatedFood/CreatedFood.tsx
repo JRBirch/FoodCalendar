@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { RefObject, useState } from "react";
 import Styles from "./CreatedFoodStyles.module.css";
 
-import {Food} from "../../pages/FoodList/FoodList"
+import { Food } from "../../pages/FoodList/FoodList";
+import { useDragging } from "../../custom_hooks/useDragging";
 
 // We get the food AND the methods for handling the food state
 // This item needed its own component as each component has its own edit state.
@@ -10,14 +11,15 @@ import {Food} from "../../pages/FoodList/FoodList"
 // FoodList component.
 
 type CreatedFood = {
- food: Food,
- removeItem: (id: number) => void;
- updateItem: (food: Food) => void;
-}
+  food: Food;
+  removeItem: (id: number) => void;
+  updateItem: (food: Food) => void;
+};
 
-const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
+const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
   const [localFood, setLocalFood] = useState(food);
   const [editState, setEditState] = useState(false);
+  const [liref, x, y, isDragging] = useDragging();
 
   const handleEdit = () => {
     setEditState(true);
@@ -43,7 +45,7 @@ const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
           </label> */}
           <input
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.name_input}`}
             value={localFood.name}
             onChange={handleChange}
             id="name"
@@ -54,7 +56,7 @@ const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
           </label> */}
           <input
             type="text"
-            className={Styles.form_input}
+            className={`${Styles.form_input} ${Styles.quantity_input}`}
             value={localFood.quantity}
             onChange={handleChange}
             id="quantity"
@@ -85,22 +87,27 @@ const CreatedFood = ({ food, removeItem, updateItem } : CreatedFood) => {
     );
   } else {
     return (
-      <li className={Styles.created_food}>
+      <li
+        className={Styles.created_food}
+        ref={liref}
+        style={{
+          position: isDragging ? "absolute" : undefined,
+          left: isDragging ? x : undefined,
+          top: isDragging ? y : undefined,
+          backgroundColor: isDragging ? "red" : "white",
+        }}
+      >
         <div>
-        {localFood.name} {localFood.quantity} {localFood.unitOfMeasure}
+          {localFood.name} {localFood.quantity} {localFood.unitOfMeasure}
         </div>
         <div>
           <button className={Styles.button} onClick={handleEdit}>
             edit
           </button>
-          <button
-            className={Styles.button}
-            onClick={() => removeItem(localFood._id)}
-          >
+          <button className={Styles.button} onClick={() => removeItem(localFood._id)}>
             delete
           </button>
         </div>
-        
       </li>
     );
   }
