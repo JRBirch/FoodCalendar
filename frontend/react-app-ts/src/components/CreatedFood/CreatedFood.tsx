@@ -40,9 +40,6 @@ const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
     return (
       <form onSubmit={submitEdit} className={Styles.created_food}>
         <div className={Styles.input_food_form}>
-          {/* <label htmlFor="name" className="form-label">
-            Name
-          </label> */}
           <input
             type="text"
             className={`${Styles.form_input} ${Styles.name_input}`}
@@ -51,9 +48,6 @@ const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
             id="name"
             name="name"
           />
-          {/* <label htmlFor="quantity" className="form-label">
-            Quantity
-          </label> */}
           <input
             type="text"
             className={`${Styles.form_input} ${Styles.quantity_input}`}
@@ -62,9 +56,6 @@ const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
             id="quantity"
             name="quantity"
           />
-          {/* <label htmlFor="unitOfMeasure" className="form-label">
-            Unit of Measure
-          </label> */}
           <select
             name="unitOfMeasure"
             id="unitOfMeasure"
