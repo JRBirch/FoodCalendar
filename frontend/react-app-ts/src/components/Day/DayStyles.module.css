@@ -21,6 +21,7 @@
     border-radius: 25px;
     margin: 0.5rem;
     padding: 0.1rem;
+    overflow-x: hidden;
 }
 
 .heading{

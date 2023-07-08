@@ -1,10 +1,11 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
 import Loading from "../../components/Loading/Loading";
 import FoodCategory from "../../components/FoodCategory/FoodCategory";
+import { dayString, monthString } from "../../utility/date";
 
 import Styles from "./FoodListStyles.module.css";
 
@@ -35,15 +36,15 @@ const initialFoodState: Food = {
   unitOfMeasure: UnitOfMeasure.UNITS,
   category: "",
   createdBy: "",
-  date: ""
+  date: "",
 };
 
-type FoodsGroupedByCategory = {[category:string]:Food[]}
+type FoodsGroupedByCategory = { [category: string]: Food[] };
 
 const FoodList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [food, setFood] = useState(initialFoodState);
-  const [groupedFoods, setGroupedFoods] = useState<FoodsGroupedByCategory>({})
+  const [groupedFoods, setGroupedFoods] = useState<FoodsGroupedByCategory>({});
 
   const params = useParams();
   const date =
@@ -51,7 +52,7 @@ const FoodList = () => {
       ? new Date(params.date)
       : new Date();
 
-  const updateItem = async (category: string, food:Food) => {
+  const updateItem = async (category: string, food: Food) => {
     try {
       if (!food.category) return;
       await axios.patch(`/api/v1/foods/${food._id}`, {
@@ -68,26 +69,27 @@ const FoodList = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      if (!food.name) return;
+      let category = food.category;
+      if (typeof category === "undefined") return;
+      if (!food.category) {
+        category = "no category";
+      }
       const resp = await axios.post("/api/v1/foods/", {
         name: food.name,
         quantity: food.quantity,
         unitOfMeasure: food.unitOfMeasure,
         date: date.toString(),
-        category: food.category,
+        category: category,
       });
       const createdFood = resp.data;
-      let category = food.category
-      if (typeof category === "undefined"){
-        category = "no category"
-      }
-
-      let newGroupedFoods: FoodsGroupedByCategory = {...groupedFoods}
-      if (groupedFoods[category]){
-        newGroupedFoods[category] = [...groupedFoods[category], createdFood]
+      let newGroupedFoods: FoodsGroupedByCategory = { ...groupedFoods };
+      if (groupedFoods[category]) {
+        newGroupedFoods[category] = [...groupedFoods[category], createdFood];
       } else {
-        newGroupedFoods[category] = [createdFood]
+        newGroupedFoods[category] = [createdFood];
       }
-      setGroupedFoods(newGroupedFoods)
+      setGroupedFoods(newGroupedFoods);
       setFood(initialFoodState);
     } catch (error) {
       console.log(error);
@@ -96,9 +98,9 @@ const FoodList = () => {
 
   const clearFoodList = () => {
     Object.keys(groupedFoods).forEach((category) => {
-      groupedFoods[category].forEach((food)=>deleteFood(food))
-    })
-    setGroupedFoods({})
+      groupedFoods[category].forEach((food) => deleteFood(food));
+    });
+    setGroupedFoods({});
   };
 
   const deleteFood = async (food: Food) => {
@@ -107,16 +109,16 @@ const FoodList = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const removeItem = async (category: string, food: Food) => {
     try {
-      await deleteFood(food)
-      const foodsList = groupedFoods[category]
-      const newFoodsList = foodsList.filter((item) => item._id !== food._id)
-      const newGroupedFoods = {...groupedFoods}
-      newGroupedFoods[category] = newFoodsList
-      setGroupedFoods(newGroupedFoods)
+      await deleteFood(food);
+      const foodsList = groupedFoods[category];
+      const newFoodsList = foodsList.filter((item) => item._id !== food._id);
+      const newGroupedFoods = { ...groupedFoods };
+      newGroupedFoods[category] = newFoodsList;
+      setGroupedFoods(newGroupedFoods);
     } catch (error) {
       console.log(error);
     }
@@ -127,18 +129,19 @@ const FoodList = () => {
     try {
       const resp = await axios.get("/api/v1/foods", { params: { date: date.toString() } });
       const foods = resp.data;
-      const newGroupedFoods = foods.reduce((object: {[category: string] :Food[]}, fetchedFoods: Food) => {
-        let field = "no category";
-        if (fetchedFoods.category !== undefined){
-          field = fetchedFoods.category
-        }
-        object[field] = object[field] || [];
-        object[field].push(fetchedFoods);
-        return object;
-      }, {});
-      setGroupedFoods(newGroupedFoods)
-      // setGroupedFoods(newGroupedFoods);
-      // setCreatedFoods(foods);
+      const newGroupedFoods = foods.reduce(
+        (object: { [category: string]: Food[] }, fetchedFoods: Food) => {
+          let field = "no category";
+          if (fetchedFoods.category !== undefined) {
+            field = fetchedFoods.category;
+          }
+          object[field] = object[field] || [];
+          object[field].push(fetchedFoods);
+          return object;
+        },
+        {}
+      );
+      setGroupedFoods(newGroupedFoods);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -152,23 +155,6 @@ const FoodList = () => {
   useEffect(() => {
     fetchFoods();
   }, []);
-
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  
 
   if (isLoading) {
     return <Loading />;
@@ -239,14 +225,22 @@ const FoodList = () => {
           <section id={Styles.list_foods_section}>
             <h3 id={Styles.list_foods_section_h3}>
               {" "}
-              {`${days[date.getDay()]} ${date.getDate()} ${
-                months[date.getMonth()]
-              } ${date.getFullYear()}`}{" "}
+              {`${dayString(date.getDay())} ${date.getDate()} ${monthString(
+                date.getMonth()
+              )} ${date.getFullYear()}`}{" "}
             </h3>
             <ul className={Styles.category_list}>
               {/* List the categories */}
-              {Object.keys(groupedFoods).map((category, index)=>{
-                return <FoodCategory key={index} categoryName={category} foods={groupedFoods[category]} removeItem={removeItem} updateItem={updateItem}/>
+              {Object.keys(groupedFoods).map((category, index) => {
+                return (
+                  <FoodCategory
+                    key={index}
+                    categoryName={category}
+                    foods={groupedFoods[category]}
+                    removeItem={removeItem}
+                    updateItem={updateItem}
+                  />
+                );
               })}
             </ul>
           </section>

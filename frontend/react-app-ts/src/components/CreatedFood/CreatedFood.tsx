@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Food } from "../../pages/FoodList/FoodList";
 import { useDragging } from "../../custom_hooks/useDragging";
@@ -25,7 +25,6 @@ const Siblings = (element: Element, name: string): HTMLElement | undefined => {
 };
 
 const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
-
   const removeButtons = () => {
     if (!liref.current) return;
     const newCategoryHeadingElement = Siblings(liref.current, "H2");
@@ -58,7 +57,7 @@ const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
   };
 
   /**
-   * Update the food category on the server. Change the food category locally. This is done after the 
+   * Update the food category on the server. Change the food category locally. This is done after the
    * the object is down being dragged.
    */
   useEffect(() => {
@@ -126,6 +125,7 @@ const CreatedFood = ({ food, removeItem, updateItem }: CreatedFood) => {
           left: isDragging ? x : undefined,
           top: isDragging ? y : undefined,
           backgroundColor: isDragging ? "red" : "white",
+          zIndex: isDragging ? 5 : 0,
         }}
       >
         <div>

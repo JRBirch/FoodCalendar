@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Food } from "../../pages/FoodList/FoodList";
 import CreatedFood from "../CreatedFood/CreatedFood";
 
@@ -11,7 +10,7 @@ type FoodCategoryInput = {
   updateItem: (category: string, food: Food, skipSetMethod?: boolean) => Promise<void>;
 };
 
-const FoodCategory = ({ categoryName, foods, removeItem, updateItem}: FoodCategoryInput) => {
+const FoodCategory = ({ categoryName, foods, removeItem, updateItem }: FoodCategoryInput) => {
   return (
     <>
       <div className={Styles.category}>
