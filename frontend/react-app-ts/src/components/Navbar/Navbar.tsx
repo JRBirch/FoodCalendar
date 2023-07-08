@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
 import { useGlobalContext } from "../../Context";
 
 import NavbarStyles from "./NavbarStyles.module.css";
 
 const Navbar = () => {
-  const { isLoggedIn, setAndClearIsLoggedIn, setAndClearUsername } = useGlobalContext();
+  const { isLoggedIn, setAndClearIsLoggedIn, setAndClearUsername, username } = useGlobalContext();
 
   const navigate = useNavigate();
 
@@ -26,22 +27,19 @@ const Navbar = () => {
 
   return (
     <nav className={NavbarStyles.nav}>
-      <h1>Food App</h1>
+      {isLoggedIn ? <h1>{username}'s Food App</h1> : <h1>Food App</h1>}
       <div className={NavbarStyles.links}>
-        <Link to="/">Home</Link>
-        <Link to="/calendar">Calendar</Link>
-      </div>
-
       {/* Conditionally render login / log out button */}
+      <Link to="/" className={NavbarStyles.link}>Home</Link>
       {isLoggedIn ? (
-        <div>
-          <button onClick={handleLogout} className={NavbarStyles.button}>Logout</button>
-        </div>
+          <>
+            <Link to="/calendar" className={NavbarStyles.link}>Calendar</Link>
+            <button onClick={handleLogout} className={NavbarStyles.link}>Logout</button>
+          </>
       ) : (
-        <div>
-          <button onClick={() => navigate("/login")} className={NavbarStyles.button}>Log In</button>
-        </div>
+          <button onClick={() => navigate("/login")} className={NavbarStyles.link}>Log In</button>
       )}
+      </div>
     </nav>
   );
 };

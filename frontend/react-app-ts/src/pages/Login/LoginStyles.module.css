@@ -40,3 +40,12 @@
 .button:active{
     box-shadow: 1px 0px 15px black;
 }
+
+.link{
+    color: var(--cream);
+    text-decoration: none;
+}
+
+.link:visited{
+    color: var(--hover-color)
+}

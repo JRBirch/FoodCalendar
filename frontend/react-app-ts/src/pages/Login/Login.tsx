@@ -27,7 +27,7 @@ const LoginScreen = () => {
       setIsLoggedIn(true);
       setUsername(username);
       setLoginInfo(initialLoginInfo);
-      navigate("/");
+      navigate("/calendar");
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +71,7 @@ const LoginScreen = () => {
         <button type="submit" className={LoginStyles.button}>
           Submit
         </button>
-        <Link to="/register">Register</Link>
+        <Link to="/register" className={LoginStyles.link}>Register</Link>
       </form>
     </>
   );

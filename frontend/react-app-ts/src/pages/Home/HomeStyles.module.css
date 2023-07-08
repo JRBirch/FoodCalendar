@@ -1,0 +1,10 @@
+@import "../../vars.css";
+
+.link{
+    color: var(--green);
+    text-decoration: none;
+}
+
+.link:visited{
+    color: var(--hover-color)
+}

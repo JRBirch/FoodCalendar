@@ -2,10 +2,11 @@
 
 .nav{
     padding: 1.5rem;
-    background-color: var(--hover-color);
+    background-color: var(--green);
     color: var(--cream);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     min-width: 100%;
     position: sticky;
 }
@@ -16,17 +17,23 @@
     gap:1rem;
 }
 
-.button{
-    color: black;
-    background-color: var(--cream);
-    border: 0;
-    padding: 5px;
-    margin: 2px;
+.link{
+    text-decoration: none;
+    border: 1px solid var(--cream);
     border-radius: 5px;
-    box-shadow: 1px 1px 5px black;
-    max-width: max-content;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--cream);
 }
 
-.button:active{
+.link:hover{
+    background-color: var(--hover-color);
+}
+
+.link:active{
     box-shadow: 1px 0px 15px black;
+}
+
+.link:visited{
+    color: var(--green)
 }
