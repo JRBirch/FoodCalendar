@@ -6,6 +6,7 @@ interface IFood {
   unitOfMeasure: string;
   createdBy: ObjectId;
   date: Date;  //YYYY-MM-DD
+  category: string;
 }
 
 type FoodDoc = HydratedDocument<IFood>;
@@ -31,6 +32,10 @@ const foodSchema = new Schema<IFood>({
   date: {
     type: Date,
     required: [true, "Please provide a date"]
+  },
+  category: {
+    type: String,
+    required: false,
   }
 });
 
