@@ -18,10 +18,17 @@
 
 .input_food_form{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+}
+
+.input{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .form_label{
@@ -117,5 +124,9 @@
     box-shadow: 1px 0px 15px black;
 }
 
-
+@media screen and (min-width:1000px){
+    .input_food_form{
+        flex-direction: row;
+    }
+}
 

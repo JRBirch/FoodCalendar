@@ -165,56 +165,64 @@ const FoodList = () => {
         <div className={Styles.enter_list_food}>
           <form className={Styles.create_food_form} onSubmit={handleSubmit}>
             <div className={Styles.input_food_form}>
-              <label htmlFor="name" className={Styles.form_label}>
-                Name:
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                className={`${Styles.form_input} ${Styles.name_input}`}
-                value={food.name}
-                onChange={handleChange}
-              />
-              <label htmlFor="quantity" className={Styles.form_label}>
-                Quantity:
-              </label>
-              <input
-                id="quantity"
-                name="quantity"
-                type="text"
-                className={`${Styles.form_input} ${Styles.quantity_input}`}
-                value={food.quantity}
-                onChange={handleChange}
-              />
-              <label htmlFor="unitOfMeasure" className={Styles.form_label}>
-                Unit of Measure:
-              </label>
-              <select
-                id="unitOfMeasure"
-                name="unitOfMeasure"
-                value={food.unitOfMeasure}
-                onChange={handleChange}
-                className={Styles.form_select}
-              >
-                <option value="grams">grams</option>
-                <option value="kg">kg</option>
-                <option value="units">units</option>
-                <option value="milli litres">milli litres</option>
-                <option value="litres">litres</option>
-                <option value="cups">cups</option>
-              </select>
-              <label htmlFor="Category" className={Styles.form_label}>
-                Category:
-              </label>
-              <input
-                id="category"
-                name="category"
-                type="text"
-                className={`${Styles.form_input} ${Styles.name_input}`}
-                value={food.category}
-                onChange={handleChange}
-              />
+              <div className={Styles.input}>
+                <label htmlFor="name" className={Styles.form_label}>
+                  Name:
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  className={`${Styles.form_input} ${Styles.name_input}`}
+                  value={food.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className={Styles.input}>
+                <label htmlFor="quantity" className={Styles.form_label}>
+                  Quantity:
+                </label>
+                <input
+                  id="quantity"
+                  name="quantity"
+                  type="text"
+                  className={`${Styles.form_input} ${Styles.quantity_input}`}
+                  value={food.quantity}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className={Styles.input}>
+                <label htmlFor="unitOfMeasure" className={Styles.form_label}>
+                  Unit of Measure:
+                </label>
+                <select
+                  id="unitOfMeasure"
+                  name="unitOfMeasure"
+                  value={food.unitOfMeasure}
+                  onChange={handleChange}
+                  className={Styles.form_select}
+                >
+                  <option value="grams">grams</option>
+                  <option value="kg">kg</option>
+                  <option value="units">units</option>
+                  <option value="milli litres">milli litres</option>
+                  <option value="litres">litres</option>
+                  <option value="cups">cups</option>
+                </select>
+              </div>
+              <div className={Styles.input}>
+                <label htmlFor="Category" className={Styles.form_label}>
+                  Category:
+                </label>
+                <input
+                  id="category"
+                  name="category"
+                  type="text"
+                  className={`${Styles.form_input} ${Styles.name_input}`}
+                  value={food.category}
+                  onChange={handleChange}
+                />
+              </div>
               <button type="submit" className={Styles.button}>
                 Submit
               </button>
