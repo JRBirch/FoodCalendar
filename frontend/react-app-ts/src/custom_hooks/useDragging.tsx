@@ -14,7 +14,7 @@ interface BoxPosition{
 
 type UseDraggingOutputs = [React.RefObject<HTMLLIElement>, number,number,boolean]
 
-const useDragging = ():UseDraggingOutputs => {
+const useDragging = (MouseUpHook:()=>void):UseDraggingOutputs => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [pos, setPos] = useState<Position>({ x: 0, y: 0 });
   const [relPos, setRelPos] = useState<Position>({ x: 0, y: 0 });
@@ -114,7 +114,11 @@ const useDragging = ():UseDraggingOutputs => {
     // Only remove if the dummy node exists
     if (!dummyNode) return;
     if (ref.current.previousElementSibling === dummyNode){
-      parent.removeChild(dummyNode)
+      parent?.removeChild(dummyNode)
+    }
+    
+    if (MouseUpHook !== undefined){
+      MouseUpHook()
     }
 
     setPos(position);

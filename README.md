@@ -34,3 +34,14 @@ To just run the node server without serving up any static files,
 `npm start -- dev` \ `npm run dev -- dev` OR `npm start` \ `npm run dev`
 
 By default the server does not serve any static files.
+
+## Dev Notes
+The dragging functionality took a long time to implement. The dragging makes use of actual DOM manipulation, which can confuse React.
+
+The dragging works by setting the position of a react element to `absolute` taking it out of the normal flow. The x and y position of the element can be updated,
+to match that of the cursor giving the dragging affect. 
+
+In React each created food was stored in array and each array belonged to a category in an object called `groupedFoods` e.g.: `{[category:string]:Food[]}`. After manipulating the actual
+DOM, for example moving food1 from category "A" to category "B", the state stored in `groupedFoods` would not reflect the actual DOM, as we have been manipulating it behind the scenes. If the React state is updated to remove food1 from category "A" React will throw an error. This is because React tries to tear down the old DOM but can no longer find the old HTML element corresponding to food1 in category "A". To prevent this from happening I had to set everything up, such that React would never tear down the old DOM state, which is a bit hackey. 
+
+In the future when trying to implement dragging functionality again I would use a library. Just from a small bit of research https://react-dnd.github.io/react-dnd/ seems like it would fit my needs.

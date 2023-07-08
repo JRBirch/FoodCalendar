@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
-import CreatedFood from "../../components/CreatedFood/CreatedFood";
 import Loading from "../../components/Loading/Loading";
+import FoodCategory from "../../components/FoodCategory/FoodCategory";
 
 import Styles from "./FoodListStyles.module.css";
 
@@ -23,6 +23,9 @@ type Food = {
   name: string;
   quantity: number;
   unitOfMeasure: UnitOfMeasure;
+  category: string | undefined;
+  createdBy: string;
+  date: string;
 };
 
 const initialFoodState: Food = {
@@ -30,12 +33,17 @@ const initialFoodState: Food = {
   name: "",
   quantity: 1,
   unitOfMeasure: UnitOfMeasure.UNITS,
+  category: "",
+  createdBy: "",
+  date: ""
 };
+
+type FoodsGroupedByCategory = {[category:string]:Food[]}
 
 const FoodList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [food, setFood] = useState(initialFoodState);
-  const [createdFoods, setCreatedFoods] = useState<Food[]>([]);
+  const [groupedFoods, setGroupedFoods] = useState<FoodsGroupedByCategory>({})
 
   const params = useParams();
   const date =
@@ -43,28 +51,15 @@ const FoodList = () => {
       ? new Date(params.date)
       : new Date();
 
-  const updateItem = async (food: Food) => {
+  const updateItem = async (category: string, food:Food) => {
     try {
-      const resp = await axios.patch(`/api/v1/foods/${food._id}`, {
+      if (!food.category) return;
+      await axios.patch(`/api/v1/foods/${food._id}`, {
         name: food.name,
         quantity: food.quantity,
         unitOfMeasure: food.unitOfMeasure,
+        category: category,
       });
-      const updatedFood = resp.data;
-      setCreatedFoods(
-        createdFoods.map((item) => {
-          if (item._id === food._id) {
-            return {
-              ...item,
-              name: updatedFood.name,
-              quantity: updatedFood.quantity,
-              unitOfMeasure: updatedFood.unitOfMeasure,
-            };
-          } else {
-            return item;
-          }
-        })
-      );
     } catch (error) {
       console.log(error);
     }
@@ -78,9 +73,21 @@ const FoodList = () => {
         quantity: food.quantity,
         unitOfMeasure: food.unitOfMeasure,
         date: date.toString(),
+        category: food.category,
       });
       const createdFood = resp.data;
-      setCreatedFoods([...createdFoods, createdFood]);
+      let category = food.category
+      if (typeof category === "undefined"){
+        category = "no category"
+      }
+
+      let newGroupedFoods: FoodsGroupedByCategory = {...groupedFoods}
+      if (groupedFoods[category]){
+        newGroupedFoods[category] = [...groupedFoods[category], createdFood]
+      } else {
+        newGroupedFoods[category] = [createdFood]
+      }
+      setGroupedFoods(newGroupedFoods)
       setFood(initialFoodState);
     } catch (error) {
       console.log(error);
@@ -88,22 +95,28 @@ const FoodList = () => {
   };
 
   const clearFoodList = () => {
-    createdFoods.forEach(deleteFood);
-    setCreatedFoods([]);
-  };
-
-  const removeItem = async (id: number) => {
-    try {
-      await axios.delete(`/api/v1/foods/${id}`);
-      setCreatedFoods(createdFoods.filter((item) => item._id !== id));
-    } catch (error) {
-      console.log(error);
-    }
+    Object.keys(groupedFoods).forEach((category) => {
+      groupedFoods[category].forEach((food)=>deleteFood(food))
+    })
+    setGroupedFoods({})
   };
 
   const deleteFood = async (food: Food) => {
     try {
       await axios.delete(`/api/v1/foods/${food._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const removeItem = async (category: string, food: Food) => {
+    try {
+      await deleteFood(food)
+      const foodsList = groupedFoods[category]
+      const newFoodsList = foodsList.filter((item) => item._id !== food._id)
+      const newGroupedFoods = {...groupedFoods}
+      newGroupedFoods[category] = newFoodsList
+      setGroupedFoods(newGroupedFoods)
     } catch (error) {
       console.log(error);
     }
@@ -114,7 +127,18 @@ const FoodList = () => {
     try {
       const resp = await axios.get("/api/v1/foods", { params: { date: date.toString() } });
       const foods = resp.data;
-      setCreatedFoods(foods);
+      const newGroupedFoods = foods.reduce((object: {[category: string] :Food[]}, fetchedFoods: Food) => {
+        let field = "no category";
+        if (fetchedFoods.category !== undefined){
+          field = fetchedFoods.category
+        }
+        object[field] = object[field] || [];
+        object[field].push(fetchedFoods);
+        return object;
+      }, {});
+      setGroupedFoods(newGroupedFoods)
+      // setGroupedFoods(newGroupedFoods);
+      // setCreatedFoods(foods);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -144,6 +168,8 @@ const FoodList = () => {
     "December",
   ];
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  
+
   if (isLoading) {
     return <Loading />;
   } else {
@@ -192,6 +218,17 @@ const FoodList = () => {
                 <option value="litres">litres</option>
                 <option value="cups">cups</option>
               </select>
+              <label htmlFor="Category" className={Styles.form_label}>
+                Category:
+              </label>
+              <input
+                id="category"
+                name="category"
+                type="text"
+                className={`${Styles.form_input} ${Styles.name_input}`}
+                value={food.category}
+                onChange={handleChange}
+              />
               <button type="submit" className={Styles.button}>
                 Submit
               </button>
@@ -206,23 +243,17 @@ const FoodList = () => {
                 months[date.getMonth()]
               } ${date.getFullYear()}`}{" "}
             </h3>
-            <ul className={Styles.food_list}>
-              {createdFoods.map((food) => {
-                return (
-                  <CreatedFood
-                    key={food._id}
-                    food={food}
-                    removeItem={removeItem}
-                    updateItem={updateItem}
-                  />
-                );
+            <ul className={Styles.category_list}>
+              {/* List the categories */}
+              {Object.keys(groupedFoods).map((category, index)=>{
+                return <FoodCategory key={index} categoryName={category} foods={groupedFoods[category]} removeItem={removeItem} updateItem={updateItem}/>
               })}
             </ul>
           </section>
         </div>
 
         {/* Delete All Foods */}
-        {createdFoods.length > 0 && (
+        {Object.keys(groupedFoods).length > 0 && (
           <button onClick={clearFoodList} className={Styles.button}>
             Clear All Foods
           </button>
