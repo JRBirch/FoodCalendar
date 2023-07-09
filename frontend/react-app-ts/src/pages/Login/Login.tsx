@@ -63,7 +63,7 @@ const LoginScreen = () => {
         <input
           id="password"
           name="password"
-          type="text"
+          type="password"
           className={LoginStyles.form_input}
           value={loginInfo.password}
           onChange={handleChange}
