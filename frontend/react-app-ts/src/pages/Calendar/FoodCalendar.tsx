@@ -76,7 +76,7 @@ const FoodCalendar = () => {
     if (foods === undefined) {
       foods = [];
     }
-    day_elements.push(<Day date={date} foodsForDay={foods} />);
+    day_elements.push(<Day key={date.toISOString()} date={date} foodsForDay={foods} />);
   }
 
   if (isLoading){

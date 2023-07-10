@@ -25,8 +25,8 @@ const CalendarDay = ({ date, foodsForDay }: Day) => {
         className={`${Styles.heading} ${sameDay(today, date) ? Styles.today_heading : ""}`}
       >{`${dayString(date.getDay())}, ${date.getDate()}`}</h4>
       <ul>
-        {foodsForDay.map((food) => {
-          return <li className={Styles.food}>{food.name}</li>;
+        {foodsForDay.map((food, index) => {
+          return <li key={index} className={Styles.food}>{food.name}</li>;
         })}
       </ul>
     </div>
