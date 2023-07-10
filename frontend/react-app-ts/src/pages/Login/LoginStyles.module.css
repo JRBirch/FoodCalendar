@@ -49,3 +49,10 @@
 .link:visited{
     color: var(--hover-color)
 }
+
+.error{
+    background-color: red;
+    padding: 1rem;
+    border-radius: 5px;
+    color: var(--cream);
+}

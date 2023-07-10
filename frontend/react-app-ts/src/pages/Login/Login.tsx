@@ -14,6 +14,7 @@ const initialLoginInfo: Login = {
 const LoginScreen = () => {
   const { setIsLoggedIn, setUsername } = useGlobalContext();
   const [loginInfo, setLoginInfo] = useState<Login>(initialLoginInfo);
+  const [error, setError] = useState("")
 
   const navigate = useNavigate();
 
@@ -29,7 +30,11 @@ const LoginScreen = () => {
       setLoginInfo(initialLoginInfo);
       navigate("/calendar");
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      setError("Wrong login infomation! Please try again");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     }
   };
 
@@ -44,6 +49,7 @@ const LoginScreen = () => {
 
   return (
     <>
+      {error && <h2 className={LoginStyles.error}>{error}</h2>}
       <form onSubmit={handleSubmit} className={LoginStyles.form}>
         <h3 className={LoginStyles.heading}>Login</h3>
         <label htmlFor="email" className={LoginStyles.form_label}>
