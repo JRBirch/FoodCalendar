@@ -1,24 +1,15 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+
 import CustomError from "../errors/custom_error";
-import { IUser, User } from "../models/user";
+import { User } from "../models/user";
+import { Login, Register } from "./types";
 
 type AuthResponse = {
   user: {
     name: string;
   };
 };
-
-type Login = {
-  email: string;
-  password: string;
-};
-
-type Register = {
-  name: string,
-  email: string,
-  password: string
-}
 
 /**
  * Register the user, which involves creating the user record, creating the JSON web token
@@ -73,4 +64,4 @@ const logout = async (req: Request<undefined, undefined, {}>, res: Response<unde
   res.clearCookie("access_token").sendStatus(StatusCodes.OK);
 };
 
-export { register, login, logout, type Login, type AuthResponse, type Register };
+export { register, login, logout, type AuthResponse };
