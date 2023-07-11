@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { dayString, sameDay } from "../../utility/date";
-import { FoodDoc } from "../../../../../backend/src/models/food";
+import { FoodDoc } from "../../../../../backend/src/models/types";
 
 import Styles from "./DayStyles.module.css";
 

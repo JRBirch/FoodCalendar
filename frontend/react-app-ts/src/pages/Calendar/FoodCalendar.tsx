@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
 
-import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/foods.ts";
+import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/types";
 import Day from "../../components/Day/Day.tsx";
 import { daysInMonth, monthString } from "../../utility/date.tsx";
 import Loading from "../../components/Loading/Loading.tsx";

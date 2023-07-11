@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Login } from "../../../../../backend/src/controllers/auth";
 import axios from "axios";
-import { useGlobalContext } from "../../Context";
 import { useNavigate, Link } from "react-router-dom";
+
+import { Login } from "../../../../../backend/src/controllers/types";
+import { useGlobalContext } from "../../Context";
 
 import LoginStyles from "./LoginStyles.module.css";
 
