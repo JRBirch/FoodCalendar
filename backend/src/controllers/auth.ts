@@ -16,7 +16,6 @@ type AuthResponse = {
  * then sending the name of the user and the token back to the client.
  */
 const register = async (req: Request<undefined, undefined, Register>, res: Response<AuthResponse>) => {
-  console.log("Registering User");
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
   res
@@ -34,7 +33,6 @@ const login = async (
   req: Request<undefined, undefined, Login>,
   res: Response<AuthResponse>
 ) => {
-  console.log("Logging User In");
   const { email, password } = req.body;
   if (!email || !password) {
     throw new CustomError("No password of email", StatusCodes.BAD_REQUEST);
@@ -60,7 +58,6 @@ const login = async (
  * Log out the user by removing the access_token cookie.
  */
 const logout = async (req: Request<undefined, undefined, {}>, res: Response<undefined>) => {
-  console.log("Logging User Out");
   res.clearCookie("access_token").sendStatus(StatusCodes.OK);
 };
 

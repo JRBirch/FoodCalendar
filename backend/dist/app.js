@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("express-async-errors"); //Async wrapper
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const morgan_1 = __importDefault(require("morgan"));
 const connect_1 = __importDefault(require("./db/connect"));
 const foods_1 = __importDefault(require("./routes/foods"));
 const auth_1 = __importDefault(require("./routes/auth"));
@@ -46,6 +47,14 @@ if (process.argv[2] == "dev" || !process.argv[2]) {
 }
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
+// Logging
+if (process.argv[2] == "dev" || !process.argv[2]) {
+    app.use((0, morgan_1.default)('dev'));
+}
+else {
+    // Similar to the 'common' type with extra response-time
+    app.use((0, morgan_1.default)(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
+}
 // Routes
 app.use("/api/v1/foods", authentication_1.authentication, foods_1.default);
 app.use("/api/v1/auth", auth_1.default);

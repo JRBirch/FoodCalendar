@@ -21,7 +21,6 @@ const user_1 = require("../models/user");
  * then sending the name of the user and the token back to the client.
  */
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Registering User");
     const user = yield user_1.User.create(Object.assign({}, req.body));
     const token = user.createJWT();
     res
@@ -36,7 +35,6 @@ exports.register = register;
  * user name and JSON web token back to the client.
  */
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Logging User In");
     const { email, password } = req.body;
     if (!email || !password) {
         throw new custom_error_1.default("No password of email", http_status_codes_1.StatusCodes.BAD_REQUEST);
@@ -62,7 +60,6 @@ exports.login = login;
  * Log out the user by removing the access_token cookie.
  */
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Logging User Out");
     res.clearCookie("access_token").sendStatus(http_status_codes_1.StatusCodes.OK);
 });
 exports.logout = logout;

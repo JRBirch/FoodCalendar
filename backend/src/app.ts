@@ -1,6 +1,8 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import "express-async-errors"; //Async wrapper
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+
 import connectDB from "./db/connect";
 import foodsRouter from "./routes/foods";
 import authRouter from "./routes/auth";
@@ -35,6 +37,14 @@ if (process.argv[2] == "dev" || !process.argv[2]) {
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Logging
+if (process.argv[2] == "dev" || !process.argv[2]){
+  app.use(morgan('dev'))
+}else {
+  // Similar to the 'common' type with extra response-time
+  app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
+}
 
 // Routes
 app.use("/api/v1/foods", authentication, foodsRouter);
