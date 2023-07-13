@@ -39,12 +39,10 @@ const login = async (
   }
   const user = await User.findOne({ email });
   if (!user) {
-    console.log("No user");
     throw new CustomError("Invalid Credentials", StatusCodes.UNAUTHORIZED);
   }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    console.log("Wrong password");
     throw new CustomError("Invalid Credentials", StatusCodes.UNAUTHORIZED);
   }
   const token = user.createJWT();

@@ -41,12 +41,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const user = yield user_1.User.findOne({ email });
     if (!user) {
-        console.log("No user");
         throw new custom_error_1.default("Invalid Credentials", http_status_codes_1.StatusCodes.UNAUTHORIZED);
     }
     const isPasswordCorrect = yield user.comparePassword(password);
     if (!isPasswordCorrect) {
-        console.log("Wrong password");
         throw new custom_error_1.default("Invalid Credentials", http_status_codes_1.StatusCodes.UNAUTHORIZED);
     }
     const token = user.createJWT();

@@ -3,6 +3,7 @@ import "express-async-errors"; //Async wrapper
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
+import { commandLineArgs } from "./utils/utilities";
 import connectDB from "./db/connect";
 import foodsRouter from "./routes/foods";
 import authRouter from "./routes/auth";
@@ -15,23 +16,26 @@ dotenv.config();
 // Create an instance of the app
 const app: Express = express();
 
+// Create an object of flags and data
+const args = commandLineArgs(process.argv)
+
 // Server up different sets of static files depending on what is input
-if (process.argv[2] == "v") {
+if (args.frontend == "v") {
   // Vanilla JS frontend
   console.log("Serving the vanilla js frontend ...");
   app.use(express.static(__dirname + "/../../frontend/vanilla"));
 }
-if (process.argv[2] == "r") {
+if (args.frontend == "r") {
   // React JS frontend
   console.log("Serving the React js frontend ...");
   app.use(express.static(__dirname + "/../../frontend/react-app/dist"));
 }
-if (process.argv[2] == "rt") {
+if (args.frontend == "rt") {
   // React-Typescript frontend
   console.log("Serving the React-Typescript frontend ...");
   app.use(express.static(__dirname + "/../../frontend/react-app-ts/dist"));
 }
-if (process.argv[2] == "dev" || !process.argv[2]) {
+if (!args.frontend || args.frontend == "dev" ) {
   console.log("Serving up no static files in developer mode ...");
 }
 
@@ -39,7 +43,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Logging
-if (process.argv[2] == "dev" || !process.argv[2]){
+// Use dev logs if running in dev mode. If the user is serving up the static
+// files then use apache type logging, this would most likely be in a production
+// environment. 
+if (!args.frontend || args.frontend == "dev" ){
   app.use(morgan('dev'))
 }else {
   // Similar to the 'common' type with extra response-time
@@ -60,10 +67,17 @@ const port = process.env.PORT || 5000;
 // Check that the mongoURI is set, then connect to the database, then load the server
 const start = async () => {
   try {
-    const mongoURI = process.env.MONGO_URI;
+    let mongoURI = process.env.MONGO_URI;
     if (typeof mongoURI === "undefined") {
       throw new Error("Mongo URI is undefined");
     }
+    let databaseName = "FoodCalendar"
+    if (args.database){
+      databaseName = args.database
+    }
+    // This means from the command line we can pass in and create any database name
+    // that we want. We can create a database specifically for testing.
+    mongoURI = `${mongoURI}/${databaseName}`
     await connectDB(mongoURI);
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
