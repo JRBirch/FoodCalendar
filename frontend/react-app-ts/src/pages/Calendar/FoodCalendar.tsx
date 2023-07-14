@@ -2,9 +2,10 @@ import { ReactElement, useEffect, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
 
-import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/foods.ts";
+import { RecordsGroupedByDate } from "../../../../../backend/src/controllers/types";
 import Day from "../../components/Day/Day.tsx";
 import { daysInMonth, monthString } from "../../utility/date.tsx";
+import Loading from "../../components/Loading/Loading.tsx";
 
 import Styles from "./FoodCalendarStyles.module.css";
 
@@ -20,6 +21,7 @@ const initialMonthAndYear: CalendarDate = {
 };
 
 const FoodCalendar = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [monthAndYear, setMonthAndYear] = useState<CalendarDate>(initialMonthAndYear);
   const [foodsGroupedDate, setFoodsGroupedDate] = useState<RecordsGroupedByDate>({});
 
@@ -44,6 +46,7 @@ const FoodCalendar = () => {
   };
 
   const fetchData = async (): Promise<void> => {
+    setIsLoading(true)
     try {
       const noDays = daysInMonth(monthAndYear.month, monthAndYear.year);
       const from = new Date(monthAndYear.year, monthAndYear.month, 1);
@@ -53,6 +56,7 @@ const FoodCalendar = () => {
       });
       const foods: RecordsGroupedByDate = resp.data;
       setFoodsGroupedDate(foods);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -72,20 +76,24 @@ const FoodCalendar = () => {
     if (foods === undefined) {
       foods = [];
     }
-    day_elements.push(<Day date={date} foodsForDay={foods} />);
+    day_elements.push(<Day key={date.toISOString()} date={date} foodsForDay={foods} />);
   }
 
-  return (
-    <>
-      <div className={Styles.month}>
-        <AiOutlineArrowLeft onClick={decreaseMonth} />
-        <h2 className={Styles.month_heading}>{`${monthString(monthAndYear.month)} ${
-          monthAndYear.year
-        }`}</h2>
-        <AiOutlineArrowRight onClick={increaseMonth} />
-      </div>
-      <div className={Styles.calendar}>{day_elements}</div>
-    </>
-  );
+  if (isLoading){
+    return <Loading/>
+  } else {
+    return (
+      <>
+        <div className={Styles.month}>
+          <AiOutlineArrowLeft onClick={decreaseMonth} />
+          <h2 className={Styles.month_heading}>{`${monthString(monthAndYear.month)} ${
+            monthAndYear.year
+          }`}</h2>
+          <AiOutlineArrowRight onClick={increaseMonth} />
+        </div>
+        <div className={Styles.calendar}>{day_elements}</div>
+      </>
+    );
+  }
 };
 export default FoodCalendar;

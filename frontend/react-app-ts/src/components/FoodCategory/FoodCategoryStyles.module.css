@@ -1,0 +1,21 @@
+
+.category{
+    background-color: green;
+    border-radius: 25px;
+    padding: 1rem;
+    width: 100%;
+    height: 100%;
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-content: flex-start;
+    gap: 0.5rem;
+}
+
+.category_heading{
+    background-color: darkgreen;
+    padding: 1rem;
+    border-radius: 25px;
+    height: 4rem;
+    text-transform: capitalize;
+}

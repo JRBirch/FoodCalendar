@@ -1,14 +1,6 @@
-import { Schema, model, isValidObjectId, HydratedDocument, ObjectId, Types, Date } from "mongoose";
+import { Schema, model, isValidObjectId, Types } from "mongoose";
 
-interface IFood {
-  name: string;
-  quantity: number;
-  unitOfMeasure: string;
-  createdBy: ObjectId;
-  date: Date;  //YYYY-MM-DD
-}
-
-type FoodDoc = HydratedDocument<IFood>;
+import { IFood } from "./types";
 
 const foodSchema = new Schema<IFood>({
   name: { type: String, required: [true, "Please provide name of food"] },
@@ -31,6 +23,10 @@ const foodSchema = new Schema<IFood>({
   date: {
     type: Date,
     required: [true, "Please provide a date"]
+  },
+  category: {
+    type: String,
+    required: false,
   }
 });
 
@@ -40,4 +36,4 @@ const isValidId = (id: string): boolean => {
 
 const Food = model<IFood>("Food", foodSchema);
 
-export { IFood, Food, FoodDoc, isValidId };
+export { type IFood, Food, isValidId };

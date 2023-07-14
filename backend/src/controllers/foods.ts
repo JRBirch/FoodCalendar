@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import CustomError from "../errors/custom_error";
-import { IFood, Food, FoodDoc, isValidId } from "../models/food";
 
-// TODO: Add better typing for the incoming requests, then can use these types in the frontend as well
+import CustomError from "../errors/custom_error";
+import { IFood, Food, isValidId } from "../models/food";
+import { FoodDoc } from "../models/types";
+import { RecordsGroupedByDate } from "./types";
 
 type Searchquery = {
   createdBy: string;
   date?: string | { $gte: string; $lte: string };
 };
-
-type RecordsGroupedByDate = { [ISOdate: string]: FoodDoc[] }
 
 /**
  * Endpoint expects either a date OR a from/to, if both are given then date takes precedence
@@ -128,4 +127,4 @@ const deleteFood = async (req: Request, res: Response<FoodDoc>) => {
   res.status(StatusCodes.OK).json(food);
 };
 
-export { getAllFoods, createFood, getSingleFood, editFood, deleteFood, type RecordsGroupedByDate };
+export { getAllFoods, createFood, getSingleFood, editFood, deleteFood};

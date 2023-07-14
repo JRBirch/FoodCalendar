@@ -1,34 +1,111 @@
-@import "../../vars.css";
 
 .nav{
     padding: 1.5rem;
-    background-color: var(--hover-color);
+    background-color: var(--green);
     color: var(--cream);
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 100%;
     position: sticky;
     top: 0;
-    z-index: 100;
+    border-bottom: 1px solid black;
+}
+
+.main_headings{
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem;
+    
+}
+
+.links_wrapper{
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s linear;
+    width: 100%;
 }
 
 .links{
     padding:0.25rem;    
     display: flex;
+    flex-direction: column;
     gap:1rem;
 }
 
-.button{
-    color: black;
-    background-color: var(--cream);
+.link{
+    text-decoration: none;
     border: 0;
-    padding: 5px;
-    margin: 2px;
     border-radius: 5px;
-    box-shadow: 1px 1px 5px black;
-    max-width: max-content;
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: var(--cream);
+    width: 100%;
+    background-color: var(--green);
+    text-align: right;
 }
 
-.button:active{
+.link:hover{
+    background-color: var(--hover-color);
+}
+
+.link:active{
     box-shadow: 1px 0px 15px black;
+}
+
+.link:visited{
+    color: var(--cream)
+}
+
+.button{
+    font-size: 1.5rem;
+    color: var(--cream);
+    background: transparent;
+    border-color: transparent;
+    transition: all 0.3s linear;
+    cursor: pointer;
+}
+.button:hover {
+    color: var(--cream);
+    transform: rotate(90deg);
+}
+
+@media screen and (min-width:600px){
+    .nav{
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: center;
+    }
+    .main_headings{
+        width: auto;
+    }
+    .links_wrapper{
+        height: auto !important;
+        width: auto;
+    }
+    .links{
+        flex-direction: row;
+        overflow: visible;
+    }
+    .link{
+        text-decoration: none;
+        border: 1px solid var(--cream);
+        border-radius: 5px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: black;
+        background-color: var(--cream);
+        text-align: center;
+        width:auto;
+    }
+    .link:visited{
+        color: var(--green)
+    }
+    .button{
+        display:none;
+    }
 }

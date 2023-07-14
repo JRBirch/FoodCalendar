@@ -1,16 +1,8 @@
-import { Schema, model, isValidObjectId, HydratedDocument } from "mongoose";
+import { Schema, model, isValidObjectId} from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-interface IUser {
-  name: string;
-  email: string;
-  password: string;
-  createJWT(): string;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-}
-
-type UserDoc = HydratedDocument<IUser>;
+import { IUser } from "./types";
 
 const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, "Please provide name of food"] },
@@ -70,4 +62,4 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 
 const User = model<IUser>("User", userSchema);
 
-export { IUser, User, UserDoc, isValidId };
+export { type IUser, User, isValidId };

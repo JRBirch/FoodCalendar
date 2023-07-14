@@ -23,6 +23,10 @@ const foodSchema = new mongoose_1.Schema({
     date: {
         type: Date,
         required: [true, "Please provide a date"]
+    },
+    category: {
+        type: String,
+        required: false,
     }
 });
 const isValidId = (id) => {

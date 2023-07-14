@@ -1,0 +1,33 @@
+
+.link{
+    color: var(--green);
+    text-decoration: none;
+}
+
+.link:visited{
+    color: var(--hover-color)
+}
+
+/* .image1{
+    background: url('../../images/food1.jpeg');
+    height: 500px;
+    width: 500px;
+} */
+
+.image_wrapper{
+    margin:4rem;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* align-items: ; */
+    justify-content: center;
+    /* gap: 0.5rem; */
+}
+
+.image{
+    border-radius: 25px;
+    height: 500px;
+    width: 400px;
+    aspect-ratio: 5/4;
+    object-fit: cover;
+}
