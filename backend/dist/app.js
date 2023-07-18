@@ -17,7 +17,7 @@ require("express-async-errors"); //Async wrapper
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const utilities_1 = require("./utils/utilities");
-const connect_1 = __importDefault(require("./db/connect"));
+const connect_1 = require("./db/connect");
 const foods_1 = __importDefault(require("./routes/foods"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const not_found_1 = __importDefault(require("./middleware/not_found"));
@@ -76,17 +76,24 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         if (typeof mongoURI === "undefined") {
             throw new Error("Mongo URI is undefined");
         }
+        // The database name from the command line has precedence
+        // Then the database name from the ENV variable DB
+        // Then the default
         let databaseName = "FoodCalendar";
         if (args.database) {
             databaseName = args.database;
         }
+        else if (process.env.DB) {
+            databaseName = process.env.DB;
+        }
         // This means from the command line we can pass in and create any database name
-        // that we want. We can create a database specifically for testing.
+        // that we want.
         mongoURI = `${mongoURI}/${databaseName}`;
-        yield (0, connect_1.default)(mongoURI);
         app.listen(port, () => {
             console.log(`Server is listening on port ${port}...`);
         });
+        const connection = yield (0, connect_1.connectDB)(mongoURI);
+        return connection;
     }
     catch (error) {
         console.log(error);
@@ -96,3 +103,4 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
 if (require.main === module) {
     start();
 }
+exports.default = app;

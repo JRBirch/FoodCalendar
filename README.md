@@ -6,6 +6,9 @@ The aim of this application is to create a backend api for a FoodCalendar app. T
 - Express
 - React 
 
+## Node Version
+This code is design to run with node version: v16.17.1. Please ensure you have node version v16.17.1 installed.
+
 ## Config
 Before running the app an .env file should be created inside `/backend``. This will need to contain the below variables:
 
@@ -14,12 +17,17 @@ PORT = 5000
 MONGO_URI = mongodb://localhost:27017
 JWT_SECRET = someSecret
 JWT_LIFETIME = 500d
+DB = MYDB
+TEST_DB = TEST
 ```
 
-`PORT` - This is the port on which the server will run 
-`MONGO_URI` - This is the connection string for connecting your mongodb database. Do not include any optional paramters if running with `--database` as the app will add the database name on to the end of the connection string
-`JWT_SECRET` - The secret used to sign the JWT (change it from `someSecret`)
-`JWT_LIFETIME` - The length of time that the JWT is valid
+- `PORT` - This is the port on which the server will run.
+- `MONGO_URI` - This is the connection string for connecting your mongodb database. Do not include any optional paramters if running with `--database` as the app will add the database name on to the end of the connection string.
+- `JWT_SECRET` - The secret used to sign the JWT (change it from `someSecret`).
+- `JWT_LIFETIME` - The length of time that the JWT is valid.
+- `NODE_ENV` - Whether the environment is production or development.
+- `DB` - The name of the mongodb database to use with the application. The database name specified via the command line (--database *db name*) takes precedence over this value.
+- `TEST_DB` - The name of the database to use when running tests.
 
 ## Starting the Server
 For development, in one terminal run:
@@ -41,6 +49,7 @@ Then to run the server:
 `npm start` or `node ./dist/app`
 
 ## Command Line Args
+These arguments are only allowed when running the instance from node, not when running tests with jest.
 
 ### --frontend
 The app can be run with three different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other two have been written using React js (one with typescript) and are single page applications. Ensure you are in the backend folder and run,
@@ -69,6 +78,12 @@ To use a specific database name:
 
 If no database name is provided the default is `FoodCalendar`. 
 
+## Running Tests
+The tests are written using jest. To run the units tests, use the command: 
+
+`npm run test`
+
+The name specified by `TEST_DB` will be the name of the database used for testing.
 
 ## Developer Notes
 
