@@ -43,7 +43,7 @@ describe("User Endpoints", () => {
     }));
     test("Errors On Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const user = {
-            name: "test2"
+            name: "test2",
         };
         const res = yield supertest.post("/api/v1/auth/register").send(user);
         expect(res.statusCode).toBe(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR);
@@ -86,8 +86,6 @@ describe("User Endpoints", () => {
         expect(resLoginWrongBody.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         expect(JSON.parse(resLoginWrongBody.text).msg).toBe("No password or email");
     }));
-    // Add tests for what happens when wrong input for both login and register
-    // Both should throw exceptions
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield tearDownDb();

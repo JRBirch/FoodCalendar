@@ -36,11 +36,13 @@ describe("User Endpoints", () => {
 
   test("Errors On Register", async () => {
     const user = {
-      name: "test2"
-    } 
+      name: "test2",
+    };
     const res = await supertest.post("/api/v1/auth/register").send(user);
-    expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
-    expect(JSON.parse(res.text).msg).toBe("User validation failed: password: Please provide password, email: Please provide email");
+    expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(JSON.parse(res.text).msg).toBe(
+      "User validation failed: password: Please provide password, email: Please provide email"
+    );
   });
 
   test("Login/Logout User", async () => {
@@ -84,8 +86,6 @@ describe("User Endpoints", () => {
     expect(JSON.parse(resLoginWrongBody.text).msg).toBe("No password or email");
   });
 
-  // Add tests for what happens when wrong input for both login and register
-  // Both should throw exceptions
 });
 
 afterAll(async () => {
