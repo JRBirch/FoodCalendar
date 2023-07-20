@@ -18,16 +18,16 @@ const foodSchema = new mongoose_1.Schema({
     createdBy: {
         type: mongoose_1.Types.ObjectId,
         ref: "User",
-        required: [true, "Please provide a user"]
+        required: [true, "Please provide a user"],
     },
     date: {
         type: Date,
-        required: [true, "Please provide a date"]
+        required: [true, "Please provide a date"],
     },
     category: {
         type: String,
         required: false,
-    }
+    },
 });
 const isValidId = (id) => {
     return (0, mongoose_1.isValidObjectId)(id);
