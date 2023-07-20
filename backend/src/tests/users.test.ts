@@ -2,9 +2,9 @@ import request from "supertest";
 import { StatusCodes } from "http-status-codes";
 
 import app from "../app";
-import { connectDB, disconnectDB, dropDatabase } from "../db/connect";
+import { connectDB } from "../db/connect";
 import { User } from "../models/user";
-import { error } from "console";
+import { tearDownDb } from "./common";
 
 // Supertest handles setting up the server and tearing it down
 const supertest = request(app);
@@ -85,12 +85,10 @@ describe("User Endpoints", () => {
     expect(resLoginWrongBody.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(JSON.parse(resLoginWrongBody.text).msg).toBe("No password or email");
   });
-
 });
 
 afterAll(async () => {
-  await tearDownDb();
-  return disconnectDB();
+  return tearDownDb();
 });
 
 const initialiseUserDb = async () => {
@@ -99,12 +97,5 @@ const initialiseUserDb = async () => {
     email: "test@test.com",
     password: "testpassword",
   };
-  await User.create(user);
-};
-
-/**
- * Tear down the entire db
- */
-const tearDownDb = () => {
-  return dropDatabase();
+  return await User.create(user);
 };

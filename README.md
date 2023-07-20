@@ -97,3 +97,12 @@ In React each created food was stored in array and each array belonged to a cate
 DOM, for example moving food1 from category "A" to category "B", the state stored in `groupedFoods` would not reflect the actual DOM, as we have been manipulating it behind the scenes. If the React state is updated to remove food1 from category "A" React will throw an error. This is because React tries to tear down the old DOM but can no longer find the old HTML element corresponding to food1 in category "A". To prevent this from happening I had to set everything up, such that React would never tear down the old DOM state, which is a bit hackey. 
 
 In the future when trying to implement dragging functionality again I would use a library. Just from a small bit of research https://react-dnd.github.io/react-dnd/ seems like it would fit my needs.
+
+### Backend Testing
+When running the jest tests we do not want them running in parallel. To stop this jest provides a CLI option `--runInBand`. This will run all tests serially in the current process, rather than creating a worker pool of child processes that run tests.
+
+`Supertest` wraps `superagent`, to provide a high-level abstraction for testing HTTP. In node `SuperAgent` does not save cookies by default, but you can use the `agent()` method to create a copy of `SuperAgent` that saves cookies. Each copy has a separate cookie jar.
+
+```typescript 
+const const supertest = request.agent(app);
+```

@@ -22,7 +22,7 @@
     "dev": "nodemon ./dist/app",
     "build": "tsc",
     "devb": "tsc -w",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",

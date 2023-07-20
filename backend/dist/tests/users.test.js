@@ -17,6 +17,7 @@ const http_status_codes_1 = require("http-status-codes");
 const app_1 = __importDefault(require("../app"));
 const connect_1 = require("../db/connect");
 const user_1 = require("../models/user");
+const common_1 = require("./common");
 // Supertest handles setting up the server and tearing it down
 const supertest = (0, supertest_1.default)(app_1.default);
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,8 +89,7 @@ describe("User Endpoints", () => {
     }));
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield tearDownDb();
-    return (0, connect_1.disconnectDB)();
+    return (0, common_1.tearDownDb)();
 }));
 const initialiseUserDb = () => __awaiter(void 0, void 0, void 0, function* () {
     const user = {
@@ -97,11 +97,5 @@ const initialiseUserDb = () => __awaiter(void 0, void 0, void 0, function* () {
         email: "test@test.com",
         password: "testpassword",
     };
-    yield user_1.User.create(user);
+    return yield user_1.User.create(user);
 });
-/**
- * Tear down the entire db
- */
-const tearDownDb = () => {
-    return (0, connect_1.dropDatabase)();
-};
