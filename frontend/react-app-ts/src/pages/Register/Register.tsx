@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { Register } from "../../../../../backend/src/controllers/auth";
+import { Register } from "../../../../../backend/src/controllers/types";
 import { useNavigate } from "react-router-dom";
 
 import Styles from "./RegisterStyles.module.css";
