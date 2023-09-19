@@ -114,7 +114,7 @@ describe("Food Endpoints", () => {
         expect(banana.date).toBe(testDate.toISOString());
         expect(banana.category).toBe("Lunch");
     }));
-    test("500 thrown when createdBy date is not included", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("500 thrown when date is not included", () => __awaiter(void 0, void 0, void 0, function* () {
         const food = {
             name: "banana",
             quantity: 5,
@@ -125,9 +125,6 @@ describe("Food Endpoints", () => {
         expect(resCreatedFood.statusCode).toBe(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR);
         expect(JSON.parse(resCreatedFood.text).msg).toBe("Food validation failed: date: Please provide a date");
     }));
-    // TODO: Add extra tests when creating food checking the errors that are thrown when
-    // required fields are left out
-    // Have a think about how you want to add exceptions to your db
     test("User can delete food from the db", () => __awaiter(void 0, void 0, void 0, function* () {
         const resFood = yield supertest.delete(`/api/v1/foods/${newFood._id}`);
         expect(resFood.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
@@ -172,9 +169,6 @@ describe("Food Endpoints", () => {
         expect(resLogin.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
         return resLogin;
     });
-    // TODO: Thoroughly test the endpoints, producing errors from the db and from the controllers - Done 
-    // TODO: Test get all foods endpoint a bit more - as it has from/to/limit behaviour - Done
-    // TODO: Do not tear down the connection between every test - Done
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     return (0, common_1.tearDownDb)();
