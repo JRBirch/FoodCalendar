@@ -19,7 +19,7 @@ beforeAll(async () => {
 describe("Food Endpoints", () => {
   let newUser: UserDoc;
   let newFood: FoodDoc;
-  const testDate = new Date("2023-07-20T09:44:24.725Z");
+  const testDate = new Date("2023-07-20T23:00:00.000Z");
 
   // Drop and initialise the db after each test, so that each test runs from
   // the same starting point
@@ -44,6 +44,36 @@ describe("Food Endpoints", () => {
     expect(apple.category).toBe("Breakfast");
   });
 
+  test("User can fetch foods from db inbetween a date", async() => {
+    // When we submit the date we submit a date time with the year, month, and day, but the time part is set to 23:00:00.000
+    // Therefore the tests should mimic this
+    const food = {
+      name: "banana",
+      quantity: 10,
+      unitOfMeasure: "grams",
+      date: testDate,
+      category: "Lunch",
+      createdBy: newUser._id,
+    };
+    newFood = await Food.create(food);
+
+    let from = new Date(2023, 6, 1)
+    let to = new Date(2023, 6, 31)
+    const currentdate = new Date(testDate.getFullYear(), testDate.getMonth(), testDate.getDate())
+    const resFoodOne = await supertest.get("/api/v1/foods").query({from, to, limit: 1});
+    expect(resFoodOne.statusCode).toBe(StatusCodes.OK);
+    expect(resFoodOne.body[currentdate.toISOString()].length).toBe(1);
+    const resFoodTwo = await supertest.get("/api/v1/foods").query({from, to, limit: 2});
+    expect(resFoodTwo.statusCode).toBe(StatusCodes.OK);
+    expect(resFoodTwo.body[currentdate.toISOString()].length).toBe(2);
+    
+    from = new Date(2023,7,1)
+    to = new Date(2023,7,31)
+    const resFoodNone = await supertest.get("/api/v1/foods").query({from, to, limit: 2});
+    expect(resFoodNone.statusCode).toBe(StatusCodes.OK);
+    expect(Object.keys(resFoodNone.body).length).toBe(0);
+  })
+
   test("User can fetch single food from db", async () => {
     const resFood = await supertest.get(`/api/v1/foods/${newFood._id}`);
     expect(resFood.statusCode).toBe(StatusCodes.OK);
@@ -55,6 +85,18 @@ describe("Food Endpoints", () => {
     expect(apple.date).toBe(testDate.toISOString());
     expect(apple.category).toBe("Breakfast");
   });
+
+  test("404 thrown when fetching wrong id from db", async()=>{
+    const resFood = await supertest.get(`/api/v1/foods/64b0629403776fb50941c423`);
+    expect(resFood.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(JSON.parse(resFood.text).msg).toBe("No food found with id 64b0629403776fb50941c423");
+  })
+
+  test("400 thrown when fetching id with wrong format", async()=>{
+    const resFood = await supertest.get(`/api/v1/foods/64b0629403776fb50941c42`);
+    expect(resFood.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(JSON.parse(resFood.text).msg).toBe("Id 64b0629403776fb50941c42 is not a valid database id");
+  })
 
   test("User can create a food for the db", async () => {
     const food = {
@@ -74,6 +116,18 @@ describe("Food Endpoints", () => {
     expect(banana.date).toBe(testDate.toISOString());
     expect(banana.category).toBe("Lunch");
   });
+
+  test("500 thrown when date is not included", async() => {
+    const food = {
+      name: "banana",
+      quantity: 5,
+      unitOfMeasure: "kg",
+      category: "Lunch"
+    }
+    const resCreatedFood = await supertest.post("/api/v1/foods").send(food);
+    expect(resCreatedFood.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    expect(JSON.parse(resCreatedFood.text).msg).toBe("Food validation failed: date: Please provide a date")
+  })
 
   test("User can delete food from the db", async () => {
     const resFood = await supertest.delete(`/api/v1/foods/${newFood._id}`);
@@ -122,9 +176,6 @@ describe("Food Endpoints", () => {
     return resLogin;
   };
 
-  // TODO: Thoroughly test the endpoints, producing errors from the db and from the controllers 
-  // TODO: Test get all foods endpoint a bit more - as it has from/to/limit behaviour
-  // TODO: Do not tear down the connection between every test
 });
 
 afterAll(async () => {

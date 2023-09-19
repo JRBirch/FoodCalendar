@@ -27,7 +27,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 describe("Food Endpoints", () => {
     let newUser;
     let newFood;
-    const testDate = new Date("2023-07-20T09:44:24.725Z");
+    const testDate = new Date("2023-07-20T23:00:00.000Z");
     // Drop and initialise the db after each test, so that each test runs from
     // the same starting point
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,6 +48,33 @@ describe("Food Endpoints", () => {
         expect(apple.date).toBe(testDate.toISOString());
         expect(apple.category).toBe("Breakfast");
     }));
+    test("User can fetch foods from db inbetween a date", () => __awaiter(void 0, void 0, void 0, function* () {
+        // When we submit the date we submit a date time with the year, month, and day, but the time part is set to 23:00:00.000
+        // Therefore the tests should mimic this
+        const food = {
+            name: "banana",
+            quantity: 10,
+            unitOfMeasure: "grams",
+            date: testDate,
+            category: "Lunch",
+            createdBy: newUser._id,
+        };
+        newFood = yield food_1.Food.create(food);
+        let from = new Date(2023, 6, 1);
+        let to = new Date(2023, 6, 31);
+        const currentdate = new Date(testDate.getFullYear(), testDate.getMonth(), testDate.getDate());
+        const resFoodOne = yield supertest.get("/api/v1/foods").query({ from, to, limit: 1 });
+        expect(resFoodOne.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+        expect(resFoodOne.body[currentdate.toISOString()].length).toBe(1);
+        const resFoodTwo = yield supertest.get("/api/v1/foods").query({ from, to, limit: 2 });
+        expect(resFoodTwo.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+        expect(resFoodTwo.body[currentdate.toISOString()].length).toBe(2);
+        from = new Date(2023, 7, 1);
+        to = new Date(2023, 7, 31);
+        const resFoodNone = yield supertest.get("/api/v1/foods").query({ from, to, limit: 2 });
+        expect(resFoodNone.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+        expect(Object.keys(resFoodNone.body).length).toBe(0);
+    }));
     test("User can fetch single food from db", () => __awaiter(void 0, void 0, void 0, function* () {
         const resFood = yield supertest.get(`/api/v1/foods/${newFood._id}`);
         expect(resFood.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
@@ -58,6 +85,16 @@ describe("Food Endpoints", () => {
         expect(apple.createdBy).toBe(String(newUser._id));
         expect(apple.date).toBe(testDate.toISOString());
         expect(apple.category).toBe("Breakfast");
+    }));
+    test("404 thrown when fetching wrong id from db", () => __awaiter(void 0, void 0, void 0, function* () {
+        const resFood = yield supertest.get(`/api/v1/foods/64b0629403776fb50941c423`);
+        expect(resFood.statusCode).toBe(http_status_codes_1.StatusCodes.NOT_FOUND);
+        expect(JSON.parse(resFood.text).msg).toBe("No food found with id 64b0629403776fb50941c423");
+    }));
+    test("400 thrown when fetching id with wrong format", () => __awaiter(void 0, void 0, void 0, function* () {
+        const resFood = yield supertest.get(`/api/v1/foods/64b0629403776fb50941c42`);
+        expect(resFood.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        expect(JSON.parse(resFood.text).msg).toBe("Id 64b0629403776fb50941c42 is not a valid database id");
     }));
     test("User can create a food for the db", () => __awaiter(void 0, void 0, void 0, function* () {
         const food = {
@@ -77,6 +114,20 @@ describe("Food Endpoints", () => {
         expect(banana.date).toBe(testDate.toISOString());
         expect(banana.category).toBe("Lunch");
     }));
+    test("500 thrown when createdBy date is not included", () => __awaiter(void 0, void 0, void 0, function* () {
+        const food = {
+            name: "banana",
+            quantity: 5,
+            unitOfMeasure: "kg",
+            category: "Lunch"
+        };
+        const resCreatedFood = yield supertest.post("/api/v1/foods").send(food);
+        expect(resCreatedFood.statusCode).toBe(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR);
+        expect(JSON.parse(resCreatedFood.text).msg).toBe("Food validation failed: date: Please provide a date");
+    }));
+    // TODO: Add extra tests when creating food checking the errors that are thrown when
+    // required fields are left out
+    // Have a think about how you want to add exceptions to your db
     test("User can delete food from the db", () => __awaiter(void 0, void 0, void 0, function* () {
         const resFood = yield supertest.delete(`/api/v1/foods/${newFood._id}`);
         expect(resFood.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
@@ -121,9 +172,9 @@ describe("Food Endpoints", () => {
         expect(resLogin.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
         return resLogin;
     });
-    // TODO: Thoroughly test the endpoints, producing errors from the db and from the controllers 
-    // TODO: Test get all foods endpoint a bit more - as it has from/to/limit behaviour
-    // TODO: Do not tear down the connection between every test
+    // TODO: Thoroughly test the endpoints, producing errors from the db and from the controllers - Done 
+    // TODO: Test get all foods endpoint a bit more - as it has from/to/limit behaviour - Done
+    // TODO: Do not tear down the connection between every test - Done
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     return (0, common_1.tearDownDb)();

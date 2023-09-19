@@ -53,7 +53,7 @@ const getSingleFood = async (req: Request, res: Response<FoodDoc>) => {
     params: { id: foodId },
   } = req;
   if (!isValidId(foodId)) {
-    throw new CustomError(`Id ${foodId} is not a valid database Id`, StatusCodes.BAD_REQUEST);
+    throw new CustomError(`Id ${foodId} is not a valid database id`, StatusCodes.BAD_REQUEST);
   }
   const food = await Food.findOne({
     _id: foodId,
