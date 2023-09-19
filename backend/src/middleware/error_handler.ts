@@ -8,7 +8,7 @@ const errorHandlerMiddleware = (error: Error, req: Request, res: Response, next:
   if (error instanceof CustomError) {
     return res.status(error.statusCode).json({ msg: error.message });
   }
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: error.message});
 };
 
 export default errorHandlerMiddleware;

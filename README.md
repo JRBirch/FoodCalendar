@@ -6,6 +6,9 @@ The aim of this application is to create a backend api for a FoodCalendar app. T
 - Express
 - React 
 
+## Node Version
+This code is design to run with node version: v16.17.1. Please ensure you have node version v16.17.1 installed.
+
 ## Config
 Before running the app an .env file should be created inside `/backend``. This will need to contain the below variables:
 
@@ -14,12 +17,17 @@ PORT = 5000
 MONGO_URI = mongodb://localhost:27017
 JWT_SECRET = someSecret
 JWT_LIFETIME = 500d
+DB = MYDB
+TEST_DB = TEST
 ```
 
-`PORT` - This is the port on which the server will run 
-`MONGO_URI` - This is the connection string for connecting your mongodb database. Do not include any optional paramters if running with `--database` as the app will add the database name on to the end of the connection string
-`JWT_SECRET` - The secret used to sign the JWT (change it from `someSecret`)
-`JWT_LIFETIME` - The length of time that the JWT is valid
+- `PORT` - This is the port on which the server will run.
+- `MONGO_URI` - This is the connection string for connecting your mongodb database. Do not include any optional paramters if running with `--database` as the app will add the database name on to the end of the connection string.
+- `JWT_SECRET` - The secret used to sign the JWT (change it from `someSecret`).
+- `JWT_LIFETIME` - The length of time that the JWT is valid.
+- `NODE_ENV` - Whether the environment is production or development.
+- `DB` - The name of the mongodb database to use with the application. The database name specified via the command line (--database *db name*) takes precedence over this value.
+- `TEST_DB` - The name of the database to use when running tests.
 
 ## Starting the Server
 For development, in one terminal run:
@@ -41,6 +49,7 @@ Then to run the server:
 `npm start` or `node ./dist/app`
 
 ## Command Line Args
+These arguments are only allowed when running the instance from node, not when running tests with jest.
 
 ### --frontend
 The app can be run with three different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other two have been written using React js (one with typescript) and are single page applications. Ensure you are in the backend folder and run,
@@ -69,6 +78,12 @@ To use a specific database name:
 
 If no database name is provided the default is `FoodCalendar`. 
 
+## Running Tests
+The tests are written using jest. To run the units tests, use the command: 
+
+`npm run test`
+
+The name specified by `TEST_DB` will be the name of the database used for testing.
 
 ## Developer Notes
 
@@ -82,3 +97,12 @@ In React each created food was stored in array and each array belonged to a cate
 DOM, for example moving food1 from category "A" to category "B", the state stored in `groupedFoods` would not reflect the actual DOM, as we have been manipulating it behind the scenes. If the React state is updated to remove food1 from category "A" React will throw an error. This is because React tries to tear down the old DOM but can no longer find the old HTML element corresponding to food1 in category "A". To prevent this from happening I had to set everything up, such that React would never tear down the old DOM state, which is a bit hackey. 
 
 In the future when trying to implement dragging functionality again I would use a library. Just from a small bit of research https://react-dnd.github.io/react-dnd/ seems like it would fit my needs.
+
+### Backend Testing
+When running the jest tests we do not want them running in parallel. To stop this jest provides a CLI option `--runInBand`. This will run all tests serially in the current process, rather than creating a worker pool of child processes that run tests.
+
+`Supertest` wraps `superagent`, to provide a high-level abstraction for testing HTTP. In node `SuperAgent` does not save cookies by default, but you can use the `agent()` method to create a copy of `SuperAgent` that saves cookies. Each copy has a separate cookie jar.
+
+```typescript 
+const const supertest = request.agent(app);
+```

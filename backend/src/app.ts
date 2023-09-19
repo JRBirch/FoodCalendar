@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 import { commandLineArgs } from "./utils/utilities";
-import connectDB from "./db/connect";
+import {connectDB} from "./db/connect";
 import foodsRouter from "./routes/foods";
 import authRouter from "./routes/auth";
 import notFound from "./middleware/not_found";
@@ -71,17 +71,24 @@ const start = async () => {
     if (typeof mongoURI === "undefined") {
       throw new Error("Mongo URI is undefined");
     }
+
+    // The database name from the command line has precedence
+    // Then the database name from the ENV variable DB
+    // Then the default
     let databaseName = "FoodCalendar"
     if (args.database){
       databaseName = args.database
+    } else if (process.env.DB){
+      databaseName = process.env.DB
     }
     // This means from the command line we can pass in and create any database name
-    // that we want. We can create a database specifically for testing.
+    // that we want.
     mongoURI = `${mongoURI}/${databaseName}`
-    await connectDB(mongoURI);
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });
+    const connection = await connectDB(mongoURI);
+    return connection
   } catch (error) {
     console.log(error);
   }
@@ -91,3 +98,5 @@ const start = async () => {
 if (require.main === module) {
   start();
 }
+
+export default app;

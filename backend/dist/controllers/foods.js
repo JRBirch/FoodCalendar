@@ -57,7 +57,7 @@ exports.getAllFoods = getAllFoods;
 const getSingleFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user: { userId }, params: { id: foodId }, } = req;
     if (!(0, food_1.isValidId)(foodId)) {
-        throw new custom_error_1.default(`Id ${foodId} is not a valid database Id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
+        throw new custom_error_1.default(`Id ${foodId} is not a valid database id`, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
     const food = yield food_1.Food.findOne({
         _id: foodId,

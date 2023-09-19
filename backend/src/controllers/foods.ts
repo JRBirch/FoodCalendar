@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import CustomError from "../errors/custom_error";
-import { IFood, Food, isValidId } from "../models/food";
-import { FoodDoc } from "../models/types";
+import { Food, isValidId } from "../models/food";
+import { IFood, FoodDoc } from "../models/types";
 import { RecordsGroupedByDate } from "./types";
 
 type Searchquery = {
@@ -14,13 +14,10 @@ type Searchquery = {
 /**
  * Endpoint expects either a date OR a from/to, if both are given then date takes precedence
  * Can also limit the results, if a date & limit are provided then the number of products returned will
- * be less than or equal to the limit. If a from/to & limit are provided then the number of 
+ * be less than or equal to the limit. If a from/to & limit are provided then the number of
  * products per date will be limited.
  */
-const getAllFoods = async (
-  req: Request,
-  res: Response<FoodDoc[] | RecordsGroupedByDate>
-) => {
+const getAllFoods = async (req: Request, res: Response<FoodDoc[] | RecordsGroupedByDate>) => {
   const query: Searchquery = { createdBy: req.user.userId };
   if (req.query.date) {
     query.date = String(req.query.date);
@@ -56,7 +53,7 @@ const getSingleFood = async (req: Request, res: Response<FoodDoc>) => {
     params: { id: foodId },
   } = req;
   if (!isValidId(foodId)) {
-    throw new CustomError(`Id ${foodId} is not a valid database Id`, StatusCodes.BAD_REQUEST);
+    throw new CustomError(`Id ${foodId} is not a valid database id`, StatusCodes.BAD_REQUEST);
   }
   const food = await Food.findOne({
     _id: foodId,
@@ -127,4 +124,4 @@ const deleteFood = async (req: Request, res: Response<FoodDoc>) => {
   res.status(StatusCodes.OK).json(food);
 };
 
-export { getAllFoods, createFood, getSingleFood, editFood, deleteFood};
+export { getAllFoods, createFood, getSingleFood, editFood, deleteFood };

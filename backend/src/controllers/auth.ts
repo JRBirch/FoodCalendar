@@ -35,7 +35,7 @@ const login = async (
 ) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    throw new CustomError("No password of email", StatusCodes.BAD_REQUEST);
+    throw new CustomError("No password or email", StatusCodes.BAD_REQUEST);
   }
   const user = await User.findOne({ email });
   if (!user) {

@@ -37,7 +37,7 @@ exports.register = register;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!email || !password) {
-        throw new custom_error_1.default("No password of email", http_status_codes_1.StatusCodes.BAD_REQUEST);
+        throw new custom_error_1.default("No password or email", http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
     const user = yield user_1.User.findOne({ email });
     if (!user) {

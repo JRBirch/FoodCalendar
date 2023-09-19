@@ -16,18 +16,18 @@ const foodSchema = new Schema<IFood>({
     default: "units",
   },
   createdBy: {
-    type: Types.ObjectId, 
+    type: Types.ObjectId,
     ref: "User",
-    required: [true, "Please provide a user"]
+    required: [true, "Please provide a user"],
   },
   date: {
     type: Date,
-    required: [true, "Please provide a date"]
+    required: [true, "Please provide a date"],
   },
   category: {
     type: String,
     required: false,
-  }
+  },
 });
 
 const isValidId = (id: string): boolean => {
@@ -36,4 +36,4 @@ const isValidId = (id: string): boolean => {
 
 const Food = model<IFood>("Food", foodSchema);
 
-export { type IFood, Food, isValidId };
+export { Food, isValidId };
