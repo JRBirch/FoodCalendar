@@ -20,7 +20,6 @@ const utilities_1 = require("./utils/utilities");
 const connect_1 = require("./db/connect");
 const foods_1 = __importDefault(require("./routes/foods"));
 const auth_1 = __importDefault(require("./routes/auth"));
-const not_found_1 = __importDefault(require("./middleware/not_found"));
 const error_handler_1 = __importDefault(require("./middleware/error_handler"));
 const authentication_1 = require("./middleware/authentication");
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -64,8 +63,10 @@ else {
 // Routes
 app.use("/api/v1/foods", authentication_1.authentication, foods_1.default);
 app.use("/api/v1/auth", auth_1.default);
-// Middleware
-app.use(not_found_1.default);
+// This seems to fix the issue of refreshing the page, the react state files are 
+// served back up to the user. A page not found screen will instead be shown on 
+// the frontend, telling the user they have gone to a wrong url.
+app.use("/*", express_1.default.static(__dirname + "/../../frontend/react-app-ts/dist"));
 app.use(error_handler_1.default);
 // Port number on which server will run
 const port = process.env.PORT || 5000;

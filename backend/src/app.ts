@@ -57,8 +57,10 @@ if (!args.frontend || args.frontend == "dev" ){
 app.use("/api/v1/foods", authentication, foodsRouter);
 app.use("/api/v1/auth", authRouter);
 
-// Middleware
-app.use(notFound);
+// This seems to fix the issue of refreshing the page, the react state files are 
+// served back up to the user. A page not found screen will instead be shown on 
+// the frontend, telling the user they have gone to a wrong url.
+app.use("/*", express.static(__dirname + "/../../frontend/react-app-ts/dist"));
 app.use(errorHandlerMiddleware);
 
 // Port number on which server will run

@@ -7,6 +7,7 @@ import { LoginScreen } from "./pages/Login/Login";
 import RegisterScreen from "./pages/Register/Register";
 import ProtectedRoutes from "./shared_layouts/ProtectedRoutes";
 import FoodCalendar from "./pages/Calendar/FoodCalendar";
+import { NotFound } from "./pages/NotFound/NotFound";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="calendar" element={<FoodCalendar />} />
             <Route path="foodlist/:date" element={<FoodList />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
