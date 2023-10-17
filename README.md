@@ -1,5 +1,5 @@
 # FoodCalendar
-The aim of this application is to create a backend api for a FoodCalendar app. The idea being a user can attach different foods to a day on their calendar. The purpose of this project was to help me explore different technologies and concepts associated with web development. Some of the main technologies I have used while developing this application include: 
+The aim of this application is to create a program for a FoodCalendar app. The idea being a user can attach different foods to a day on their calendar. The purpose of this project was to help me explore different technologies and concepts associated with web development. Some of the main technologies I have used while developing this application include: 
 
 - MongoDB
 - Typescript
@@ -10,13 +10,14 @@ The aim of this application is to create a backend api for a FoodCalendar app. T
 This code is design to run with node version: v16.17.1. Please ensure you have node version v16.17.1 installed.
 
 ## Config
-Before running the app an .env file should be created inside `/backend``. This will need to contain the below variables:
+Before running the app an .env file should be created inside `/backend``. This will need to contain the below variables,
 
 ```
 PORT = 5000
 MONGO_URI = mongodb://localhost:27017
 JWT_SECRET = someSecret
 JWT_LIFETIME = 500d
+NODE_ENV = production
 DB = MYDB
 TEST_DB = TEST
 ```
@@ -52,7 +53,11 @@ Then to run the server:
 These arguments are only allowed when running the instance from node, not when running tests with jest.
 
 ### --frontend
-The app can be run with three different frontends. One has been written using purely vanilla js and makes use of server side rendering, the other two have been written using React js (one with typescript) and are single page applications. Ensure you are in the backend folder and run,
+The app can be run with three different frontends. One has been written using purely vanilla js, the other two have been written using React js (one with typescript). The frontend with the most development time has been the typescript one. To run this frontend,
+
+`npm start -- --frontend rt` \ `npm run dev -- --frontend rt`
+
+To serve up the vanilla frontend the `rt` argument can be used,
 
 `npm start -- --frontend v` \ `npm run dev -- --frontend v` 
 
@@ -60,9 +65,6 @@ To serve up the react frontend the `r` argument can be used,
 
 `npm start -- --frontend r` \ `npm run dev -- --frontend r`
 
-To serve up the react typescript frontend the `rt` argument can be used, 
-
-`npm start -- --frontend rt` \ `npm run dev -- --frontend rt`
 
 To just run the node server without serving up any static files,
 
@@ -74,7 +76,7 @@ By default the server does not serve any static files.
 
 To use a specific database name: 
 
-`npm start -- --database *name of ur db*`
+`npm start -- --database *name of your db*`
 
 If no database name is provided the default is `FoodCalendar`. 
 
@@ -85,7 +87,7 @@ The tests are written using jest. To run the units tests, use the command:
 
 The name specified by `TEST_DB` will be the name of the database used for testing.
 
-## Developer Notes
+## Some Developer Notes
 
 ### Frontend Dragging
 The dragging functionality took a long time to implement. The dragging makes use of actual DOM manipulation, which can confuse React.
